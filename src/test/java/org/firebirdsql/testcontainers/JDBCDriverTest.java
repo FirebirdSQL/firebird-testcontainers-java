@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
-import org.testcontainers.jdbc.ConnectionUrl;
 import org.testcontainers.jdbc.ContainerDatabaseDriver;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.EnumSet;
@@ -43,6 +43,7 @@ public class JDBCDriverTest {
             });
     }
 
+    @SuppressWarnings("unused")
     public static void sampleInitFunction(Connection connection) throws SQLException {
         connection.createStatement().execute("CREATE TABLE bar (\n" +
             "  foo VARCHAR(255)\n" +
@@ -60,69 +61,64 @@ public class JDBCDriverTest {
 
     @Test
     public void test() throws SQLException {
-        performSimpleTest(jdbcUrl);
+        try (HikariDataSource dataSource = getDataSource(jdbcUrl, 1)) {
+            performSimpleTest(dataSource);
 
-        if (options.contains(Options.ScriptedSchema)) {
-            performTestForScriptedSchema(jdbcUrl);
-        }
+            if (options.contains(Options.ScriptedSchema)) {
+                performTestForScriptedSchema(dataSource);
+            }
 
-        if (options.contains(Options.JDBCParams)) {
-            performTestForJDBCParamUsage(jdbcUrl);
+            if (options.contains(Options.JDBCParams)) {
+                performTestForJDBCParamUsage(dataSource);
+            }
         }
     }
 
-    private void performSimpleTest(String jdbcUrl) throws SQLException {
-        try (HikariDataSource dataSource = getDataSource(jdbcUrl, 1)) {
-            boolean result = new QueryRunner(dataSource).query("SELECT 1 FROM RDB$DATABASE", rs -> {
-                rs.next();
-                int resultSetInt = rs.getInt(1);
-                assertEquals("A basic SELECT query succeeds", 1, resultSetInt);
-                return true;
-            });
+    private void performSimpleTest(DataSource dataSource) throws SQLException {
+        boolean result = new QueryRunner(dataSource).query("SELECT 1 FROM RDB$DATABASE", rs -> {
+            rs.next();
+            int resultSetInt = rs.getInt(1);
+            assertEquals("A basic SELECT query succeeds", 1, resultSetInt);
+            return true;
+        });
 
-            assertTrue("The database returned a record as expected", result);
-        }
+        assertTrue("The database returned a record as expected", result);
     }
 
-    private void performTestForScriptedSchema(String jdbcUrl) throws SQLException {
-        try (HikariDataSource dataSource = getDataSource(jdbcUrl, 1)) {
-            boolean result = new QueryRunner(dataSource).query("SELECT foo FROM bar WHERE foo LIKE '%world'", rs -> {
-                rs.next();
-                String resultSetString = rs.getString(1);
-                assertEquals("A basic SELECT query succeeds where the schema has been applied from a script", "hello world", resultSetString);
-                return true;
-            });
-        }
+    private void performTestForScriptedSchema(DataSource dataSource) throws SQLException {
+        new QueryRunner(dataSource).query("SELECT foo FROM bar WHERE foo LIKE '%world'", rs -> {
+            rs.next();
+            String resultSetString = rs.getString(1);
+            assertEquals("A basic SELECT query succeeds where the schema has been applied from a script", "hello world", resultSetString);
+            return true;
+        });
     }
 
-    private void performTestForJDBCParamUsage(String jdbcUrl) throws SQLException {
-        final String databaseType = ConnectionUrl.newInstance(jdbcUrl).getDatabaseType();
-        try (HikariDataSource dataSource = getDataSource(jdbcUrl, 1)) {
-            boolean result = new QueryRunner(dataSource).query("select CURRENT_USER FROM RDB$DATABASE", rs -> {
-                rs.next();
-                String resultUser = rs.getString(1);
-                // Not all databases (eg. Postgres) return @% at the end of user name. We just need to make sure the user name matches.
-                if (resultUser.endsWith("@%")) {
-                    resultUser = resultUser.substring(0, resultUser.length() - 2);
-                }
-                assertEquals("User from query param is created.", "SOMEUSER", resultUser);
-                return true;
-            });
+    private void performTestForJDBCParamUsage(DataSource dataSource) throws SQLException {
+        boolean result = new QueryRunner(dataSource).query("select CURRENT_USER FROM RDB$DATABASE", rs -> {
+            rs.next();
+            String resultUser = rs.getString(1);
+            // Not all databases (eg. Postgres) return @% at the end of user name. We just need to make sure the user name matches.
+            if (resultUser.endsWith("@%")) {
+                resultUser = resultUser.substring(0, resultUser.length() - 2);
+            }
+            assertEquals("User from query param is created.", "SOMEUSER", resultUser);
+            return true;
+        });
 
-            assertTrue("The database returned a record as expected", result);
+        assertTrue("The database returned a record as expected", result);
 
-            String databaseQuery = "select rdb$get_context('SYSTEM', 'DB_NAME') from RDB$DATABASE";
+        String databaseQuery = "select rdb$get_context('SYSTEM', 'DB_NAME') from RDB$DATABASE";
 
-            result = new QueryRunner(dataSource).query(databaseQuery, rs -> {
-                rs.next();
-                String resultDB = rs.getString(1);
-                // Firebird reports full path
-                assertThat("Database name from URL String is used.", resultDB, CoreMatchers.endsWith("/databasename"));
-                return true;
-            });
+        result = new QueryRunner(dataSource).query(databaseQuery, rs -> {
+            rs.next();
+            String resultDB = rs.getString(1);
+            // Firebird reports full path
+            assertThat("Database name from URL String is used.", resultDB, CoreMatchers.endsWith("/databasename"));
+            return true;
+        });
 
-            assertTrue("The database returned a record as expected", result);
-        }
+        assertTrue("The database returned a record as expected", result);
     }
 
     private HikariDataSource getDataSource(String jdbcUrl, int poolSize) {
