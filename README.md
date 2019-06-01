@@ -1,6 +1,8 @@
 firebird-testcontainers-java
 ============================
 
+[![Build Status](https://travis-ci.com/FirebirdSQL/firebird-testcontainers-java.svg?branch=master)](https://travis-ci.com/FirebirdSQL/firebird-testcontainers-java)
+
 Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
