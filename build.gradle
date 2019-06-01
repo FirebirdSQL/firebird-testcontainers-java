@@ -1,5 +1,8 @@
 plugins {
     id 'java-library'
+    id 'nu.studer.credentials' version '1.0.7'
+    id 'maven'
+    id 'signing'
 }
 
 group 'org.firebirdsql'
@@ -12,6 +15,10 @@ ext {
     testContainersVersion = '1.11.3'
     lombokVersion = '1.18.8'
     jaybirdVersion = '3.0.6'
+
+    isReleaseVersion = !version.endsWith("SNAPSHOT")
+    set("signing.password", credentials."signing.password")
+    ossrhPassword = credentials.ossrhPassword
 }
 
 repositories {
@@ -19,8 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation platform("org.testcontainers:testcontainers-bom:$testContainersVersion")
-    implementation 'org.testcontainers:jdbc'
+    api "org.testcontainers:jdbc:$testContainersVersion"
 
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
@@ -31,4 +37,77 @@ dependencies {
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation 'commons-dbutils:commons-dbutils:1.6'
     testImplementation 'com.zaxxer:HikariCP:3.3.1'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Automatic-Module-Name': 'org.firebirdsql.testcontainers'
+        )
+    }
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'firebird-testcontainers-java'
+                packaging 'jar'
+                description 'A module for Testcontainers.org to provide lightweight, throwaway instances of Firebird for JUnit tests.'
+                url 'https://github.com/FirebirdSQL/firebird-testcontainers-java'
+
+                scm {
+                    connection 'scm:git:https://github.com/FirebirdSQL/firebird-testcontainers-java.git'
+                    developerConnection 'scm:git:git@github.com:FirebirdSQL/firebird-testcontainers-java.git'
+                    url 'https://github.com/FirebirdSQL/firebird-testcontainers-java'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'mrotteveel'
+                        name 'Mark Rotteveel'
+                        email 'mark@lawinegevaar.nl'
+                    }
+                }
+            }
+        }
+    }
 }
