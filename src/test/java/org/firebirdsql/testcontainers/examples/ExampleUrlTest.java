@@ -1,6 +1,5 @@
-package org.firebirdsql.testcontainers;
+package org.firebirdsql.testcontainers.examples;
 
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -12,21 +11,18 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 
 /**
- * Simple test demonstrating use of {@code @Rule}.
+ * Simple test demonstrating use of url to instantiate container.
  */
-public class ExampleTest {
-
-    @Rule
-    public final FirebirdContainer container = new FirebirdContainer();
+public class ExampleUrlTest {
 
     @Test
-    public void canConnectToContainer() throws Exception {
+    public void canConnectUsingUrl() throws Exception {
         try (Connection connection = DriverManager
-                .getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+                .getConnection("jdbc:tc:firebird://hostname/databasename?user=someuser&password=somepwd");
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("select CURRENT_USER from RDB$DATABASE")) {
             assertTrue("has row", rs.next());
-            assertEquals("user name", container.getUsername().toUpperCase(), rs.getString(1));
+            assertEquals("user name", "SOMEUSER", rs.getString(1));
         }
     }
 }
