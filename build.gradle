@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+}
+
+group 'org.firebirdsql'
+version '1.0.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+ext {
+    testContainersVersion = '1.11.3'
+    lombokVersion = '1.18.8'
+    jaybirdVersion = '3.0.6'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform("org.testcontainers:testcontainers-bom:$testContainersVersion")
+    implementation 'org.testcontainers:jdbc'
+
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation 'org.firebirdsql.jdbc:jaybird-jdk18:3.0.6'
+    
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.3'
+    testImplementation 'commons-dbutils:commons-dbutils:1.6'
+    testImplementation 'com.zaxxer:HikariCP:3.3.1'
+}
