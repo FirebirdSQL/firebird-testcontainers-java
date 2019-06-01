@@ -17,10 +17,12 @@ See [Testcontainers prerequisites](https://www.testcontainers.org/#prerequisites
 Dependency
 ----------
 
+**NOTE: Dependency is not yet deployed to Maven Central**
+
 ### Gradle
 
 ```groovy
-testCompile "org.firebirdsql:firebird-testcontainers-java:1.0"
+testCompile "org.firebirdsql:firebird-testcontainers-java:1.0.0"
 ```
 
 ### Maven
@@ -29,7 +31,7 @@ testCompile "org.firebirdsql:firebird-testcontainers-java:1.0"
 <dependency>
     <groupId>org.firebirdsqls</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.0</version>
+    <version>1.0.0</version>
     <scope>test</scope>
 </dependency>
 ```
