@@ -2,6 +2,7 @@ package org.firebirdsql.testcontainers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
@@ -71,12 +72,25 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
     @Override
     public String getJdbcUrl() {
-        return "jdbc:firebirdsql://" + getContainerIpAddress() + ":" + getMappedPort(FIREBIRD_PORT) + "/" + databaseName;
+        return "jdbc:firebirdsql://" + getContainerIpAddress() + ":" + getMappedPort(FIREBIRD_PORT) + "/" + getDatabaseName();
     }
 
     @Override
     public String getDatabaseName() {
+        if (isRunning()) {
+            if (isFirebird25Image()) {
+                // The 2.5 images of jacobalberty/firebird require an absolute path to access the database
+                // Provide this value only when the container is running
+                String databasePath = getEnvMap().getOrDefault("DBPATH", "/firebird/data");
+                return databasePath + "/" + databaseName;
+            }
+        }
         return databaseName;
+    }
+
+    private boolean isFirebird25Image() {
+        DockerImageName imageName = new DockerImageName(getDockerImageName());
+        return imageName.getUnversionedPart().equals(IMAGE) && imageName.getVersionPart().startsWith("2.5");
     }
 
     @Override
@@ -160,6 +174,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     @Override
     protected void waitUntilContainerStarted() {
         getWaitStrategy().waitUntilReady(this);
+        super.waitUntilContainerStarted();
     }
 
     /**

@@ -6,6 +6,10 @@ import org.junit.Test;
 
 import java.sql.*;
 
+import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
+import static org.firebirdsql.testcontainers.FirebirdContainer.IMAGE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.rnorth.visibleassertions.VisibleAssertions.*;
 
 public class FirebirdContainerTest {
@@ -68,6 +72,29 @@ public class FirebirdContainerTest {
             try (Connection connection = container.createConnection("?wireCrypt=disabled")) {
                 GDSServerVersion serverVersion = connection.unwrap(FirebirdConnection.class).getFbDatabase().getServerVersion();
                 assertFalse("Expected encryption not in use", serverVersion.isWireEncryptionUsed());
+            }
+        }
+    }
+
+    /**
+     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
+     */
+    @Test
+    public void test258_scImage() throws Exception {
+        try (FirebirdContainer container = new FirebirdContainer(IMAGE + ":2.5.8-sc").withDatabaseName("test")) {
+            assertEquals("Expect original database name before start",
+                    "test", container.getDatabaseName());
+
+            container.start();
+
+            assertEquals("Expect modified database name after start",
+                    "/firebird/data/test", container.getDatabaseName());
+
+            try (Connection connection = DriverManager
+                    .getConnection("jdbc:firebirdsql://" + container.getContainerIpAddress() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
+                            container.getUsername(), container.getPassword())
+            ) {
+                assertTrue(connection.isValid(1000));
             }
         }
     }

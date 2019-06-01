@@ -8,6 +8,9 @@ to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
 The docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/).
 
+If you want to use 2.5, use the 2.5.x-sc (SuperClassic) variant of the image, as 
+the 2.5.x-ss (SuperServer) variant seems to be broken.
+
 Prerequisites
 -------------
 
