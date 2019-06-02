@@ -22,7 +22,8 @@ See [Testcontainers prerequisites](https://www.testcontainers.org/#prerequisites
 Dependency
 ----------
 
-**NOTE: Dependency is not yet deployed to Maven Central**
+In addition to the firebird-testcontainers-java dependency, you will also need
+to explicitly depend on [Jaybird](https://github.com/FirebirdSQL/jaybird).
 
 ### Gradle
 
