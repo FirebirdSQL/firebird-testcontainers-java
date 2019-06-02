@@ -1,32 +1,20 @@
 Deploying
 =========
 
+Make sure that JAVA_HOME points to Java 8 (the javadoc task fails with Java 11).
+
 To deploy to Maven use
 
 ```
-gradlew clean uploadArchives -PcredentialsPassphrase=<credentials password>
+mvn clean deploy -P release
 ```
 
-Where `<credentials password>` is the password used to add the credentials (see 
-also below).
-
-To be able to deploy, you need the following:
-
-a `<homedir>/.gradle/gradle.properties` with the following properties:
+For snapshots we can forego signing and generating javadoc + sources using:
 
 ```
-signing.keyId=<gpg key id>
-signing.secretKeyRingFile=<path to your secring.gpg> 
-
-ossrhUsername=<sonatype OSSRH username>
+mvn clean deploy
 ```
 
-In addition, you need to set the following credentials
+This requires the proper Sonatype credentials to be set in userhome/.m2/settings.xml.
 
-```
-./gradlew addCredentials --key signing.password --value <your secret key password> -PcredentialsPassphrase=<credentials password> 
-./gradlew addCredentials --key ossrhPassword --value <your sonatyp OSSRH password> -PcredentialsPassphrase=<credentials password> 
-```
-
-See https://github.com/etiennestuder/gradle-credentials-plugin for details on
-credentials.
+See https://central.sonatype.org/pages/apache-maven.html for details.

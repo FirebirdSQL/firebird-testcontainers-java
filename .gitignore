@@ -3,7 +3,9 @@ out/
 .idea_modules/
 .gradle/
 build/
+target/
 *.iws
+*.iml
 
 *.class
 *.log
