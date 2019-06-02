@@ -2,3 +2,9 @@ language: java
 
 services:
   - docker
+
+before_cache:
+  - rm -rf $HOME/.m2/repository/org/firebirdsql/firebird-testcontainers-java/
+cache:
+  directories:
+    - $HOME/.m2/repository/
