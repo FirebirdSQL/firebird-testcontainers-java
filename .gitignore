@@ -6,6 +6,7 @@ build/
 target/
 *.iws
 *.iml
+pom.xml.versionsBackup
 
 *.class
 *.log
