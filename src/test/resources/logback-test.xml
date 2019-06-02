@@ -1,0 +1,21 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="com.github.dockerjava" level="WARN"/>
+    <logger name="org.testcontainers.shaded" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+    <logger name="org.testcontainers.utility.RegistryAuthLocator" level="INFO"/>
+    <logger name="org.testcontainers.dockerclient" level="INFO"/>
+    <logger name="org.testcontainers.containers.ExecInContainerPattern" level="INFO"/>
+</configuration>
