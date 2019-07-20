@@ -18,3 +18,10 @@ mvn clean deploy
 This requires the proper Sonatype credentials to be set in userhome/.m2/settings.xml.
 
 See https://central.sonatype.org/pages/apache-maven.html for details.
+
+Updating version
+----------------
+
+```
+mvn versions:set -DnewVersion=<new version>
+```
