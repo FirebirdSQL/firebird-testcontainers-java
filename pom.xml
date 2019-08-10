@@ -37,7 +37,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <testcontainers.version>1.11.4</testcontainers.version>
+        <testcontainers.version>1.12.0</testcontainers.version>
         <lombok.version>1.18.8</lombok.version>
         <jaybird.version>3.0.6</jaybird.version>
     </properties>
