@@ -39,7 +39,7 @@
 
         <testcontainers.version>1.12.5</testcontainers.version>
         <lombok.version>1.18.8</lombok.version>
-        <jaybird.version>3.0.6</jaybird.version>
+        <jaybird.version>3.0.8</jaybird.version>
     </properties>
 
     <dependencies>
