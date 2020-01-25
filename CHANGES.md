@@ -1,8 +1,8 @@
 Version History
 ===============
 
-1.0.3-SNAPSHOT
---------------
+1.0.3
+-----
 
 - Update org.testcontainers:jdbc to 1.12.5
 
