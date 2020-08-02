@@ -18,7 +18,7 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 public class ExampleRuleTest {
 
     @Rule
-    public final FirebirdContainer container = new FirebirdContainer()
+    public final FirebirdContainer<?> container = new FirebirdContainer<>()
             .withUsername("testuser")
             .withPassword("testpassword");
 

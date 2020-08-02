@@ -17,7 +17,7 @@ public class FirebirdContainerTest {
     @Test
     public void testWithSysdbaPassword() throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer container = new FirebirdContainer().withSysdbaPassword(sysdbaPassword)) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>().withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
@@ -33,7 +33,7 @@ public class FirebirdContainerTest {
     public void testUserPasswordTakesPrecedenceOverWithSysdbaPassword() throws SQLException {
         final String userPassword = "password1";
         final String withSysdbaPassword = "password2";
-        try (FirebirdContainer container = new FirebirdContainer().withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>().withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", userPassword)) {
@@ -44,7 +44,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableLegacyClientAuth() throws SQLException {
-        try (FirebirdContainer container = new FirebirdContainer().withEnableLegacyClientAuth()) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>().withEnableLegacyClientAuth()) {
             container.start();
 
             try (Connection connection = container.createConnection("");
@@ -58,7 +58,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableWireCrypt() throws SQLException {
-        try (FirebirdContainer container = new FirebirdContainer().withEnableWireCrypt()) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>().withEnableWireCrypt()) {
             container.start();
 
             if (FirebirdContainer.isWireEncryptionSupported()) {
@@ -81,7 +81,7 @@ public class FirebirdContainerTest {
      */
     @Test
     public void test258_scImage() throws Exception {
-        try (FirebirdContainer container = new FirebirdContainer(IMAGE + ":2.5.8-sc").withDatabaseName("test")) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(IMAGE + ":2.5.8-sc").withDatabaseName("test")) {
             assertEquals("Expect original database name before start",
                     "test", container.getDatabaseName());
 
