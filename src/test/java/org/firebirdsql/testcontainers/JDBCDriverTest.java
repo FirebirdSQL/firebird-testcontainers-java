@@ -39,9 +39,8 @@ public class JDBCDriverTest {
                 {"jdbc:tc:firebird://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
                 {"jdbc:tc:firebird:3.0.4://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
                 {"jdbc:tc:firebirdsql:3.0.4://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
-                {"jdbc:tc:firebirdsql:2.5.8-sc://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
-                // 2.5.x-ss seems to be broken, see https://github.com/jacobalberty/firebird-docker/issues/33
-                // {"jdbc:tc:firebirdsql:2.5.8-ss://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
+                {"jdbc:tc:firebirdsql:2.5.9-sc://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
+                {"jdbc:tc:firebirdsql:2.5.9-ss://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", EnumSet.of(Options.ScriptedSchema, Options.JDBCParams)},
             });
     }
 
