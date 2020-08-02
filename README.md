@@ -29,7 +29,7 @@ to explicitly depend on [Jaybird](https://github.com/FirebirdSQL/jaybird).
 ### Gradle
 
 ```groovy
-testCompile "org.firebirdsql:firebird-testcontainers-java:1.0.3"
+testImplementation "org.firebirdsql:firebird-testcontainers-java:1.0.4"
 ```
 
 ### Maven
@@ -38,7 +38,7 @@ testCompile "org.firebirdsql:firebird-testcontainers-java:1.0.3"
 <dependency>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -70,7 +70,9 @@ Firebird specific options are:
 
 - `withEnableLegacyClientAuth()` - (_Firebird 3+_) Enables `LegacyAuth` and uses
 it as the default for creating users, also relaxes `WireCrypt` to `Enabled`;
-sets docker environment variable `EnableLegacyClientAuth` to `true`
+sets docker environment variable `EnableLegacyClientAuth` to `true`;
+passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if
+this property is not explicitly set through `withUrlParam`
 - `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to
 `Enabled`; sets docker environment variable `EnableWireCrypt` to `true
 - `withTimeZone(String)` - Sets the time zone (defaults to JVM default time
