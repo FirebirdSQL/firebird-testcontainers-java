@@ -4,7 +4,9 @@ Version History
 1.0.4
 -----
 
-- Update org.testcontainers:jdbc to 1.14.3 
+- Update org.testcontainers:jdbc to 1.14.3
+- Move static config in modules to constructor (see also https://github.com/testcontainers/testcontainers-java/pull/2473)
+ 
 
 1.0.3
 -----

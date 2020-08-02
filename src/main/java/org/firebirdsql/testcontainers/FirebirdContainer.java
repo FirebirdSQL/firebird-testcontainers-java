@@ -34,11 +34,11 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
     public FirebirdContainer(String dockerImageName) {
         super(dockerImageName);
+        addExposedPort(FIREBIRD_PORT);
     }
 
     @Override
     protected void configure() {
-        addExposedPort(FIREBIRD_PORT);
         addEnv("TZ", timeZone);
         addEnv("FIREBIRD_DATABASE", databaseName);
 
