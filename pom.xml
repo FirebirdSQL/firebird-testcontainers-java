@@ -39,7 +39,7 @@
 
         <testcontainers.version>1.12.5</testcontainers.version>
         <lombok.version>1.18.8</lombok.version>
-        <jaybird.version>3.0.8</jaybird.version>
+        <jaybird.version>3.0.9</jaybird.version>
     </properties>
 
     <dependencies>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
         </dependency>
 
         <dependency>
@@ -77,13 +77,13 @@
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.4.2</version>
+            <version>3.4.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
