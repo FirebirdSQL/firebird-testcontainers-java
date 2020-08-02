@@ -60,6 +60,33 @@ public class FirebirdContainerTest {
     }
 
     @Test
+    public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default() {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+                .withEnableLegacyClientAuth()) {
+            container.start();
+
+            String jdbcUrl = container.getJdbcUrl();
+            assertThat(jdbcUrl, allOf(
+                    containsString("?"),
+                    containsString("authPlugins=Srp256,Srp,Legacy_Auth")));
+        }
+    }
+
+    @Test
+    public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet() {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+                .withEnableLegacyClientAuth()
+                .withUrlParam("authPlugins", "Legacy_Auth")) {
+            container.start();
+
+            String jdbcUrl = container.getJdbcUrl();
+            assertThat(jdbcUrl, allOf(
+                    containsString("?"),
+                    containsString("authPlugins=Legacy_Auth")));
+        }
+    }
+
+    @Test
     public void testWithEnableWireCrypt() throws SQLException {
         try (FirebirdContainer<?> container = new FirebirdContainer<>().withEnableWireCrypt()) {
             container.start();
@@ -83,8 +110,8 @@ public class FirebirdContainerTest {
      * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
      */
     @Test
-    public void test258_scImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(IMAGE + ":2.5.8-sc").withDatabaseName("test")) {
+    public void test259_scImage() throws Exception {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(IMAGE + ":2.5.9-sc").withDatabaseName("test")) {
             assertEquals("Expect original database name before start",
                     "test", container.getDatabaseName());
 

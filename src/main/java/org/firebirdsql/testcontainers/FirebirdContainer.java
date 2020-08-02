@@ -19,6 +19,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final Integer FIREBIRD_PORT = 3050;
     private static final String FIREBIRD_SYSDBA = "sysdba";
     private static final int ARC4_REQUIRED_BITS = 160;
+    private static final String CONNECTION_PROPERTY_AUTH_PLUGINS = "authPlugins";
 
     private String databaseName = "test";
     private String username = "test";
@@ -54,6 +55,10 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
         if (enableLegacyClientAuth) {
             addEnv("EnableLegacyClientAuth", "true");
+            if (!urlParameters.containsKey(CONNECTION_PROPERTY_AUTH_PLUGINS)) {
+                // Allow legacy auth with Jaybird 4, while also allowing Srp256 and Srp
+                withUrlParam(CONNECTION_PROPERTY_AUTH_PLUGINS, "Srp256,Srp,Legacy_Auth");
+            }
         }
 
         if (enableWireCrypt) {

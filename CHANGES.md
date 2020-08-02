@@ -7,7 +7,8 @@ Version History
 - Update org.testcontainers:jdbc to 1.14.3
 - Move static config in modules to constructor (see also https://github.com/testcontainers/testcontainers-java/pull/2473)
 - Add ContainerState#getHost as a replacement for getContainerIpAddress (see also https://github.com/testcontainers/testcontainers-java/pull/2742)
-- Added additional url params in JdbcDatabaseContainer (see also https://github.com/testcontainers/testcontainers-java/issues/1802) 
+- Added additional url params in JdbcDatabaseContainer (see also https://github.com/testcontainers/testcontainers-java/issues/1802)
+- For compatibility with Jaybird 4, when legacy client auth is enabled and `authPlugins` URL param has not been explicitly added, add URL param `authPlugins` with value `Srp256,Srp,Legacy_auth`
 
 1.0.3
 -----
