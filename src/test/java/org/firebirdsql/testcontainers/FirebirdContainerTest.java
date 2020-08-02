@@ -91,7 +91,7 @@ public class FirebirdContainerTest {
                     "/firebird/data/test", container.getDatabaseName());
 
             try (Connection connection = DriverManager
-                    .getConnection("jdbc:firebirdsql://" + container.getContainerIpAddress() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
+                    .getConnection("jdbc:firebirdsql://" + container.getHost() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
                             container.getUsername(), container.getPassword())
             ) {
                 assertTrue(connection.isValid(1000));

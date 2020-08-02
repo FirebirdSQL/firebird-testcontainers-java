@@ -72,7 +72,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
     @Override
     public String getJdbcUrl() {
-        return "jdbc:firebirdsql://" + getContainerIpAddress() + ":" + getMappedPort(FIREBIRD_PORT) + "/" + getDatabaseName();
+        return "jdbc:firebirdsql://" + getHost() + ":" + getMappedPort(FIREBIRD_PORT) + "/" + getDatabaseName();
     }
 
     @Override
