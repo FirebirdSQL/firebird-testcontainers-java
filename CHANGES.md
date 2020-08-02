@@ -6,7 +6,8 @@ Version History
 
 - Update org.testcontainers:jdbc to 1.14.3
 - Move static config in modules to constructor (see also https://github.com/testcontainers/testcontainers-java/pull/2473)
-- Add ContainerState#getHost as a replacement for getContainerIpAddress (see also https://github.com/testcontainers/testcontainers-java/pull/2742) 
+- Add ContainerState#getHost as a replacement for getContainerIpAddress (see also https://github.com/testcontainers/testcontainers-java/pull/2742)
+- Added additional url params in JdbcDatabaseContainer (see also https://github.com/testcontainers/testcontainers-java/issues/1802) 
 
 1.0.3
 -----

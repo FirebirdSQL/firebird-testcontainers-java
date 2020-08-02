@@ -8,6 +8,9 @@ import java.sql.*;
 
 import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
 import static org.firebirdsql.testcontainers.FirebirdContainer.IMAGE;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.rnorth.visibleassertions.VisibleAssertions.*;
@@ -96,6 +99,22 @@ public class FirebirdContainerTest {
             ) {
                 assertTrue(connection.isValid(1000));
             }
+        }
+    }
+
+    @Test
+    public void testWithAdditionalUrlParamInJdbcUrl() {
+        try (FirebirdContainer<?> firebird = new FirebirdContainer<>()
+                .withUrlParam("charSet", "utf-8")
+                .withUrlParam("blobBufferSize", "2048")) {
+
+            firebird.start();
+            String jdbcUrl = firebird.getJdbcUrl();
+            assertThat(jdbcUrl, allOf(
+                    containsString("?"),
+                    containsString("&"),
+                    containsString("blobBufferSize=2048"),
+                    containsString("charSet=utf-8")));
         }
     }
 }
