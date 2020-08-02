@@ -9,7 +9,7 @@ To deploy to Maven use
 mvn clean deploy -P release
 ```
 
-For snapshots we can forego signing and generating javadoc + sources using:
+For snapshots, we can forego signing and generating javadoc + sources using:
 
 ```
 mvn clean deploy
