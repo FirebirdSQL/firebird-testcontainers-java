@@ -74,7 +74,7 @@ sets docker environment variable `EnableLegacyClientAuth` to `true`;
 passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if
 this property is not explicitly set through `withUrlParam`
 - `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to
-`Enabled`; sets docker environment variable `EnableWireCrypt` to `true
+`Enabled`; sets docker environment variable `EnableWireCrypt` to `true`
 - `withTimeZone(String)` - Sets the time zone (defaults to JVM default time
 zone); sets docker environment variable `TZ` to the specified value
 - `withSysdbaPassword(String)` - Sets the SYSDBA password, but if 
