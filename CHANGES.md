@@ -8,6 +8,7 @@ Version History
   It is recommended to switch to using an explicit image name and version
 - Added constructor `FirebirdContainer(DockerImageName)`. \
   Use with `DockerImageName.parse(FirebirdContainer.IMAGE).withTag("3.0.7")` to get an explicit version.
+- Updated default image version to Firebird 3.0.7.
 
 1.0.4
 -----

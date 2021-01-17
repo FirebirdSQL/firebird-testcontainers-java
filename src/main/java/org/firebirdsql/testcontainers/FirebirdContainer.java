@@ -15,7 +15,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final String ALTERNATE_NAME = "firebirdsql";
     public static final String IMAGE = "jacobalberty/firebird";
     static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse(IMAGE);
-    public static final String DEFAULT_TAG = "3.0.5";
+    public static final String DEFAULT_TAG = "3.0.7";
 
     public static final Integer FIREBIRD_PORT = 3050;
     private static final String FIREBIRD_SYSDBA = "sysdba";
