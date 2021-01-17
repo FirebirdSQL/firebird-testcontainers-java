@@ -3,6 +3,7 @@ package org.firebirdsql.testcontainers;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.JdbcDatabaseContainerProvider;
 import org.testcontainers.jdbc.ConnectionUrl;
+import org.testcontainers.utility.DockerImageName;
 
 public class FirebirdContainerProvider extends JdbcDatabaseContainerProvider {
 
@@ -21,7 +22,7 @@ public class FirebirdContainerProvider extends JdbcDatabaseContainerProvider {
 
     @Override
     public JdbcDatabaseContainer newInstance(String tag) {
-        return new FirebirdContainer(FirebirdContainer.IMAGE + ":" + tag);
+        return new FirebirdContainer(DockerImageName.parse(FirebirdContainer.IMAGE).withTag(tag));
     }
 
     @Override

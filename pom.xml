@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>firebird-testcontainers-java</name>
@@ -37,9 +37,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.15.1</testcontainers.version>
         <lombok.version>1.18.12</lombok.version>
-        <jaybird.version>4.0.0.java8</jaybird.version>
+        <jaybird.version>4.0.2.java8</jaybird.version>
     </properties>
 
     <dependencies>

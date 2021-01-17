@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 
@@ -18,7 +19,7 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 public class ExampleRuleTest {
 
     @Rule
-    public final FirebirdContainer<?> container = new FirebirdContainer<>()
+    public final FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
             .withUsername("testuser")
             .withPassword("testpassword");
 

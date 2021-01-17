@@ -14,6 +14,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final String NAME = "firebird";
     public static final String ALTERNATE_NAME = "firebirdsql";
     public static final String IMAGE = "jacobalberty/firebird";
+    static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse(IMAGE);
     public static final String DEFAULT_TAG = "3.0.5";
 
     public static final Integer FIREBIRD_PORT = 3050;
@@ -29,12 +30,35 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     private boolean enableWireCrypt;
     private String sysdbaPassword;
 
+    /**
+     * Creates a Firebird container with the default image ({@link #IMAGE} and {@link #DEFAULT_TAG}).
+     *
+     * @deprecated Use explicit image using {@link #FirebirdContainer(DockerImageName)}
+     */
+    @Deprecated
     public FirebirdContainer() {
-        this(IMAGE + ":" + DEFAULT_TAG);
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
+    /**
+     * Creates a Firebird container with an image name (e.g. {@code "jacobalberty/firebird:3.0.7"}.
+     *
+     * @param dockerImageName Image name
+     */
     public FirebirdContainer(String dockerImageName) {
+        this(DockerImageName.parse(dockerImageName));
+    }
+
+    /**
+     * Creates a Firebird container with a parsed image name.
+     *
+     * @param dockerImageName Parse image name
+     */
+    public FirebirdContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
+
         addExposedPort(FIREBIRD_PORT);
     }
 

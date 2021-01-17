@@ -1,13 +1,21 @@
 Version History
 ===============
 
+1.0.5
+-----
+- Updated org.testcontainers:jdbc to 1.15.1
+- Deprecated no-arg constructor of `FirebirdContainer` (see also <https://github.com/testcontainers/testcontainers-java/pull/2839>) \
+  It is recommended to switch to using an explicit image name and version
+- Added constructor `FirebirdContainer(DockerImageName)`. \
+  Use with `DockerImageName.parse(FirebirdContainer.IMAGE).withTag("3.0.7")` to get an explicit version.
+
 1.0.4
 -----
 
 - Update org.testcontainers:jdbc to 1.14.3
-- Move static config in modules to constructor (see also https://github.com/testcontainers/testcontainers-java/pull/2473)
-- Add ContainerState#getHost as a replacement for getContainerIpAddress (see also https://github.com/testcontainers/testcontainers-java/pull/2742)
-- Added additional url params in JdbcDatabaseContainer (see also https://github.com/testcontainers/testcontainers-java/issues/1802)
+- Move static config in modules to constructor (see also <https://github.com/testcontainers/testcontainers-java/pull/2473>)
+- Add `ContainerState#getHost` as a replacement for `getContainerIpAddress` (see also <https://github.com/testcontainers/testcontainers-java/pull/2742>)
+- Added additional url params in `JdbcDatabaseContainer` (see also <https://github.com/testcontainers/testcontainers-java/issues/1802>)
 - For compatibility with Jaybird 4, when legacy client auth is enabled and `authPlugins` URL param has not been explicitly added, add URL param `authPlugins` with value `Srp256,Srp,Legacy_auth`
 - Updated default image version to Firebird 3.0.5.
 

@@ -7,7 +7,9 @@ import org.junit.Test;
 import java.sql.*;
 
 import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
-import static org.firebirdsql.testcontainers.FirebirdContainer.IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SC_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SS_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,7 +22,22 @@ public class FirebirdContainerTest {
     @Test
     public void testWithSysdbaPassword() throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>().withSysdbaPassword(sysdbaPassword)) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+                .withSysdbaPassword(sysdbaPassword)) {
+            container.start();
+
+            try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
+                assertTrue("Connection is valid", connection.isValid(100));
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testImplicitImage() throws SQLException {
+        final String sysdbaPassword = "sysdbapassword";
+        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+                .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
@@ -36,7 +53,8 @@ public class FirebirdContainerTest {
     public void testUserPasswordTakesPrecedenceOverWithSysdbaPassword() throws SQLException {
         final String userPassword = "password1";
         final String withSysdbaPassword = "password2";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>().withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+                .withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", userPassword)) {
@@ -47,7 +65,8 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableLegacyClientAuth() throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>().withEnableLegacyClientAuth()) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+                .withEnableLegacyClientAuth()) {
             container.start();
 
             try (Connection connection = container.createConnection("");
@@ -61,7 +80,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default() {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withEnableLegacyClientAuth()) {
             container.start();
 
@@ -74,7 +93,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet() {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withEnableLegacyClientAuth()
                 .withUrlParam("authPlugins", "Legacy_Auth")) {
             container.start();
@@ -88,7 +107,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithEnableWireCrypt() throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>().withEnableWireCrypt()) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE).withEnableWireCrypt()) {
             container.start();
 
             if (FirebirdContainer.isWireEncryptionSupported()) {
@@ -111,7 +130,30 @@ public class FirebirdContainerTest {
      */
     @Test
     public void test259_scImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(IMAGE + ":2.5.9-sc").withDatabaseName("test")) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SC_IMAGE).withDatabaseName("test")) {
+            assertEquals("Expect original database name before start",
+                    "test", container.getDatabaseName());
+
+            container.start();
+
+            assertEquals("Expect modified database name after start",
+                    "/firebird/data/test", container.getDatabaseName());
+
+            try (Connection connection = DriverManager
+                    .getConnection("jdbc:firebirdsql://" + container.getHost() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
+                            container.getUsername(), container.getPassword())
+            ) {
+                assertTrue(connection.isValid(1000));
+            }
+        }
+    }
+
+    /**
+     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
+     */
+    @Test
+    public void test259_ssImage() throws Exception {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SS_IMAGE).withDatabaseName("test")) {
             assertEquals("Expect original database name before start",
                     "test", container.getDatabaseName());
 
@@ -131,7 +173,7 @@ public class FirebirdContainerTest {
 
     @Test
     public void testWithAdditionalUrlParamInJdbcUrl() {
-        try (FirebirdContainer<?> firebird = new FirebirdContainer<>()
+        try (FirebirdContainer<?> firebird = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withUrlParam("charSet", "utf-8")
                 .withUrlParam("blobBufferSize", "2048")) {
 
