@@ -1,7 +1,7 @@
 Version History
 ===============
 
-1.0.5
+1.1.0
 -----
 - Updated org.testcontainers:jdbc to 1.15.1
 - Deprecated no-arg constructor of `FirebirdContainer` (see also <https://github.com/testcontainers/testcontainers-java/pull/2839>) \
