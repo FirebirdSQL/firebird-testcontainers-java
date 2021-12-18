@@ -5,6 +5,8 @@ Version History
 --------------
 - Updated org.testcontainers:jdbc to 1.16.2
 - Updated junit:junit to 4.13.2
+- Updated default image version to Firebird 3.0.8. \
+  The next release will update the default image version to Firebird 4.0, so make sure you specify versions explicitly if you need to stay on Firebird 3.0.
 
 1.1.0
 -----
