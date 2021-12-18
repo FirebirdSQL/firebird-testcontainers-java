@@ -1,6 +1,7 @@
 package org.firebirdsql.testcontainers;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -8,8 +9,9 @@ import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 
-@Slf4j
 public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
+
+    private static final Logger log = LoggerFactory.getLogger(FirebirdContainer.class);
 
     public static final String NAME = "firebird";
     public static final String ALTERNATE_NAME = "firebirdsql";

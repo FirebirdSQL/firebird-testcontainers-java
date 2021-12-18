@@ -38,8 +38,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <testcontainers.version>1.15.1</testcontainers.version>
-        <lombok.version>1.18.12</lombok.version>
-        <jaybird.version>4.0.2.java8</jaybird.version>
+        <jaybird.version>4.0.4.java8</jaybird.version>
     </properties>
 
     <dependencies>
@@ -51,14 +50,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
+            <version>4.13.2</version>
         </dependency>
 
         <dependency>
@@ -71,7 +63,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,7 +75,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.4.5</version>
+            <version>5.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -100,7 +92,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -133,7 +125,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -146,7 +138,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -159,7 +151,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
