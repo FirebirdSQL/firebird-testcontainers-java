@@ -29,7 +29,7 @@ to explicitly depend on [Jaybird](https://github.com/FirebirdSQL/jaybird).
 ### Gradle
 
 ```groovy
-testImplementation "org.firebirdsql:firebird-testcontainers-java:1.1.0"
+testImplementation "org.firebirdsql:firebird-testcontainers-java:1.2.0"
 ```
 
 ### Maven
@@ -38,7 +38,7 @@ testImplementation "org.firebirdsql:firebird-testcontainers-java:1.1.0"
 <dependency>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -94,7 +94,7 @@ import org.testcontainers.utility.DockerImageName;
 public class ExampleRuleTest {
 
   private static final DockerImageName IMAGE = 
-          DockerImageName.parse(FirebirdContainer.IMAGE).withTag("3.0.7");
+          DockerImageName.parse(FirebirdContainer.IMAGE).withTag("v4.0.0");
 
   @Rule
   public final FirebirdContainer<?> container = new FirebirdContainer<?>(IMAGE)

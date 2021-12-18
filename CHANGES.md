@@ -1,8 +1,8 @@
 Version History
 ===============
 
-1.2.0-SNAPSHOT
---------------
+1.2.0
+-----
 - Updated org.testcontainers:jdbc to 1.16.2
 - Updated junit:junit to 4.13.2
 - Updated default image version to Firebird 3.0.8. \
