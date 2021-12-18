@@ -1,6 +1,11 @@
 Version History
 ===============
 
+1.2.0-SNAPSHOT
+--------------
+- Updated org.testcontainers:jdbc to 1.16.2
+- Updated junit:junit to 4.13.2
+
 1.1.0
 -----
 - Updated org.testcontainers:jdbc to 1.15.1

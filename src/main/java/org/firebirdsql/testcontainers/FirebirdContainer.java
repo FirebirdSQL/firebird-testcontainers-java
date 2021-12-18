@@ -35,7 +35,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     /**
      * Creates a Firebird container with the default image ({@link #IMAGE} and {@link #DEFAULT_TAG}).
      *
-     * @deprecated Use explicit image using {@link #FirebirdContainer(DockerImageName)}
+     * @deprecated Use explicit image using {@link #FirebirdContainer(DockerImageName)} or {@link #FirebirdContainer(String)}
      */
     @Deprecated
     public FirebirdContainer() {
@@ -122,7 +122,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     }
 
     private boolean isFirebird25Image() {
-        DockerImageName imageName = new DockerImageName(getDockerImageName());
+        DockerImageName imageName = DockerImageName.parse(getDockerImageName());
         return imageName.getUnversionedPart().equals(IMAGE) && imageName.getVersionPart().startsWith("2.5");
     }
 

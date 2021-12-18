@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>firebird-testcontainers-java</name>
@@ -37,7 +37,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <testcontainers.version>1.15.1</testcontainers.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
         <jaybird.version>4.0.4.java8</jaybird.version>
     </properties>
 
@@ -76,6 +76,12 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rnorth.visible-assertions</groupId>
+            <artifactId>visible-assertions</artifactId>
+            <version>2.1.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
