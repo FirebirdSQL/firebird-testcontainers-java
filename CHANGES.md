@@ -1,6 +1,11 @@
 Version History
 ===============
 
+1.3.0
+-----
+- Updated org.testcontainers:jdbc to 1.17.6
+- Updated various test-dependencies
+
 1.2.0
 -----
 - Updated org.testcontainers:jdbc to 1.16.2
