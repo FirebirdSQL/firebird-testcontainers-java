@@ -3,7 +3,6 @@ package org.firebirdsql.testcontainers;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.dbutils.QueryRunner;
-import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,10 @@ import java.sql.SQLException;
 import java.util.EnumSet;
 
 import static java.util.Arrays.asList;
-import static org.rnorth.visibleassertions.VisibleAssertions.*;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class JDBCDriverTest {
@@ -117,7 +119,7 @@ public class JDBCDriverTest {
             rs.next();
             String resultDB = rs.getString(1);
             // Firebird reports full path
-            assertThat("Database name from URL String is used.", resultDB, CoreMatchers.endsWith("/databasename"));
+            assertThat("Database name from URL String is used.", resultDB, endsWith("/databasename"));
             return true;
         });
 
