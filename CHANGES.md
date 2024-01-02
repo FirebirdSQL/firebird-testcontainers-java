@@ -4,6 +4,7 @@ Version History
 1.4.0
 -----
 - Updated org.testcontainers:jdbc to 1.19.3
+- Updated various test-dependencies
 
 1.3.0
 -----
