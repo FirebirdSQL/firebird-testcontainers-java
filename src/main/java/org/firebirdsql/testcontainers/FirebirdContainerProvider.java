@@ -5,6 +5,9 @@ import org.testcontainers.containers.JdbcDatabaseContainerProvider;
 import org.testcontainers.jdbc.ConnectionUrl;
 import org.testcontainers.utility.DockerImageName;
 
+/**
+ * Factory for Firebird containers.
+ */
 public class FirebirdContainerProvider extends JdbcDatabaseContainerProvider {
 
     public static final String USER_PARAM = "user";

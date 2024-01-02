@@ -9,6 +9,13 @@ import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 
+/**
+ * Testcontainers implementation for Firebird.
+ * <p>
+ * Supported image: {@code jacobalberty/firebird}
+ * <p>
+ * Exposed ports: 3050
+ */
 public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
 
     private static final Logger log = LoggerFactory.getLogger(FirebirdContainer.class);

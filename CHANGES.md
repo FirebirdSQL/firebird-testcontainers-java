@@ -6,6 +6,7 @@ Version History
 - Updated org.testcontainers:jdbc to 1.19.3
 - Updated various test-dependencies
 - Updated Maven build plugins
+- Add javadoc on (main) classes similar to testcontainers-java
 
 1.3.0
 -----
