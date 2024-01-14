@@ -28,6 +28,6 @@ jobs:
     - name: Cache Docker images.
       uses: ScribeMD/docker-cache@e481e638abdb45e2fa30845305c387a544cc617f
       with:
-        key: docker-${{ runner.os }}-${{ hashFiles(paths) }}
+        key: docker-${{ runner.os }}-${{ hashFiles('src/test/**') }}
     - name: Build with Maven
       run: mvn -B package --file pom.xml
