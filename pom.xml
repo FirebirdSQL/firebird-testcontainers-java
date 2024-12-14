@@ -38,7 +38,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <testcontainers.version>1.20.4</testcontainers.version>
-        <jaybird.version>5.0.3.java8</jaybird.version>
+        <jaybird.version>5.0.6.java8</jaybird.version>
     </properties>
 
     <dependencies>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
+            <version>1.5.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.1.0</version>
+            <version>6.2.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
