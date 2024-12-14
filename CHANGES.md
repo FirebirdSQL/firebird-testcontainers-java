@@ -5,6 +5,7 @@ Version History
 -----
 - Updated org.testcontainers:jdbc to 1.20.4
 - Updated various test-dependencies
+- Updated Maven build plugins
 
 1.4.0
 -----
