@@ -2,8 +2,8 @@ package org.firebirdsql.testcontainers;
 
 import org.firebirdsql.gds.impl.GDSServerVersion;
 import org.firebirdsql.jdbc.FirebirdConnection;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.*;
 
@@ -14,35 +14,35 @@ import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IM
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FirebirdContainerTest {
+class FirebirdContainerTest {
 
     @Test
-    public void testWithSysdbaPassword() throws SQLException {
+    void testWithSysdbaPassword() throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
-                assertTrue("Connection is valid", connection.isValid(100));
+                assertTrue(connection.isValid(100), "Connection is valid");
             }
         }
     }
 
     @SuppressWarnings("deprecation")
     @Test
-    public void testImplicitImage() throws SQLException {
+    void testImplicitImage() throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
         try (FirebirdContainer<?> container = new FirebirdContainer<>()
                 .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
-                assertTrue("Connection is valid", connection.isValid(100));
+                assertTrue(connection.isValid(100), "Connection is valid");
             }
         }
     }
@@ -51,7 +51,7 @@ public class FirebirdContainerTest {
      * With {@code username} set to sysdba, {@code password} should take precedence over {@code sysdbaPassword}
      */
     @Test
-    public void testUserPasswordTakesPrecedenceOverWithSysdbaPassword() throws SQLException {
+    void testUserPasswordTakesPrecedenceOverWithSysdbaPassword() throws SQLException {
         final String userPassword = "password1";
         final String withSysdbaPassword = "password2";
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
@@ -59,13 +59,13 @@ public class FirebirdContainerTest {
             container.start();
 
             try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", userPassword)) {
-                assertTrue("Connection is valid", connection.isValid(100));
+                assertTrue(connection.isValid(100), "Connection is valid");
             }
         }
     }
 
     @Test
-    public void testWithEnableLegacyClientAuth() throws SQLException {
+    void testWithEnableLegacyClientAuth() throws SQLException {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withEnableLegacyClientAuth()) {
             container.start();
@@ -73,14 +73,14 @@ public class FirebirdContainerTest {
             try (Connection connection = container.createConnection("");
                  Statement statement = connection.createStatement();
                  ResultSet rs = statement.executeQuery("select MON$AUTH_METHOD from MON$ATTACHMENTS where MON$ATTACHMENT_ID = CURRENT_CONNECTION")) {
-                assertTrue("Expected a row", rs.next());
-                assertEquals("Authentication method should be Legacy_Auth", "Legacy_Auth", rs.getString("MON$AUTH_METHOD"));
+                assertTrue(rs.next(), "Expected a row");
+                assertEquals("Legacy_Auth", rs.getString("MON$AUTH_METHOD"), "Authentication method should be Legacy_Auth");
             }
         }
     }
 
     @Test
-    public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default() {
+    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default() {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withEnableLegacyClientAuth()) {
             container.start();
@@ -93,7 +93,7 @@ public class FirebirdContainerTest {
     }
 
     @Test
-    public void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet() {
+    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet() {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withEnableLegacyClientAuth()
                 .withUrlParam("authPlugins", "Legacy_Auth")) {
@@ -107,7 +107,7 @@ public class FirebirdContainerTest {
     }
 
     @Test
-    public void testWithEnableWireCrypt() throws SQLException {
+    void testWithEnableWireCrypt() throws SQLException {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE).withEnableWireCrypt()) {
             container.start();
 
@@ -115,13 +115,13 @@ public class FirebirdContainerTest {
                 // Check connecting with wire crypt
                 try (Connection connection = container.createConnection("")) {
                     GDSServerVersion serverVersion = connection.unwrap(FirebirdConnection.class).getFbDatabase().getServerVersion();
-                    assertTrue("Expected encryption in use", serverVersion.isWireEncryptionUsed());
+                    assertTrue(serverVersion.isWireEncryptionUsed(), "Expected encryption in use");
                 }
             }
 
             try (Connection connection = container.createConnection("?wireCrypt=disabled")) {
                 GDSServerVersion serverVersion = connection.unwrap(FirebirdConnection.class).getFbDatabase().getServerVersion();
-                assertFalse("Expected encryption not in use", serverVersion.isWireEncryptionUsed());
+                assertFalse(serverVersion.isWireEncryptionUsed(), "Expected encryption not in use");
             }
         }
     }
@@ -130,15 +130,14 @@ public class FirebirdContainerTest {
      * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
      */
     @Test
-    public void test259_scImage() throws Exception {
+    void test259_scImage() throws Exception {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SC_IMAGE).withDatabaseName("test")) {
-            assertEquals("Expect original database name before start",
-                    "test", container.getDatabaseName());
+            assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
 
-            assertEquals("Expect modified database name after start",
-                    "/firebird/data/test", container.getDatabaseName());
+            assertEquals("/firebird/data/test", container.getDatabaseName(),
+                    "Expect modified database name after start");
 
             try (Connection connection = DriverManager
                     .getConnection("jdbc:firebirdsql://" + container.getHost() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
@@ -155,17 +154,16 @@ public class FirebirdContainerTest {
      * NOTE: This test is ignored because it occasionally fails locally and repeatedly on GitHub Actions.
      * </p>
      */
-    @Ignore
+    @Disabled
     @Test
-    public void test259_ssImage() throws Exception {
+    void test259_ssImage() throws Exception {
         try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SS_IMAGE).withDatabaseName("test")) {
-            assertEquals("Expect original database name before start",
-                    "test", container.getDatabaseName());
+            assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
 
-            assertEquals("Expect modified database name after start",
-                    "/firebird/data/test", container.getDatabaseName());
+            assertEquals("/firebird/data/test", container.getDatabaseName(),
+                    "Expect modified database name after start");
 
             try (Connection connection = DriverManager
                     .getConnection("jdbc:firebirdsql://" + container.getHost() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
@@ -177,7 +175,7 @@ public class FirebirdContainerTest {
     }
 
     @Test
-    public void testWithAdditionalUrlParamInJdbcUrl() {
+    void testWithAdditionalUrlParamInJdbcUrl() {
         try (FirebirdContainer<?> firebird = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
                 .withUrlParam("charSet", "utf-8")
                 .withUrlParam("blobBufferSize", "2048")) {
