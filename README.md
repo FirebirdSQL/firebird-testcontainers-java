@@ -6,9 +6,9 @@ firebird-testcontainers-java
 Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
-The docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/).
+The docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/), and also supports [ghcr.io/fdcastel/firebird](https://github.com/fdcastel/firebird-docker).
 
-If you want to use 2.5, use the 2.5.x-sc (SuperClassic) variant of the image, or 2.5.9-ss
+If you want to use Firebird 2.5, use the 2.5.x-sc (SuperClassic) variant of the image, or 2.5.9-ss
 as earlier versions of the 2.5.x-ss (SuperServer) variant seem to be broken.
 
 Prerequisites
@@ -56,30 +56,24 @@ The container defines several `withXXX` methods for configuration.
 
 Important standard options are:
 
-- `withUsername(String)` - Sets the username to create (defaults to `test`); if
-other than `sysdba` (case-insensitive), sets docker environment variable
-`FIREBIRD_USER`
-- `withPassword(String)` - Sets the password of the user (defaults to `test`);
-if `withUsername` is other than `sysdba` (case-insensitive), sets the docker
-environment variable `FIREBIRD_PASSWORD`, otherwise `ISC_PASSWORD`
-- `withDatabaseName(String)` - Sets the database name (defaults to `test`);
-sets docker environment variable `FIREBIRD_DATABASE`
+- `withUsername(String)` - Sets the username to create (defaults to `test`); sets docker environment variable `FIREBIRD_USER`. \
+  For `jacobalberty/firebird`, if the value is `sysdba`, `FIREBIRD_USER` is not set.
+- `withPassword(String)` - Sets the password of the user (defaults to `test`); sets the docker environment variable `FIREBIRD_PASSWORD`. \
+  For `jacobalberty/firebird`, if the username is `sysdba`, `ISC_PASSWORD` is set instead of `FIREBIRD_PASSWORD`. \
+  For `ghcr.io/fdcastel/firebird`, if the username is `sysdba`, it also sets `FIREBIRD_ROOT_PASSWORD`.
+- `withDatabaseName(String)` - Sets the database name (defaults to `test`); sets docker environment variable `FIREBIRD_DATABASE`
 
 Firebird specific options are:
 
-- `withEnableLegacyClientAuth()` - (_Firebird 3+_) Enables `LegacyAuth` and uses
-it as the default for creating users, also relaxes `WireCrypt` to `Enabled`;
-sets docker environment variable `EnableLegacyClientAuth` to `true`;
-passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if
-this property is not explicitly set through `withUrlParam`
-- `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to
-`Enabled`; sets docker environment variable `EnableWireCrypt` to `true`
-- `withTimeZone(String)` - Sets the time zone (defaults to JVM default time
-zone); sets docker environment variable `TZ` to the specified value
-- `withSysdbaPassword(String)` - Sets the SYSDBA password, but if 
-`withUsername(String)` is set to `sysdba` (case-insensitive), this property is
-ignored and the value of `withPassword` is used instead; sets docker
-environment variable `ISC_PASSWORD` to the specified value
+- `withEnableLegacyClientAuth()` - (_Firebird 3+_) Enables `LegacyAuth` and uses it as the default for creating users, also relaxes `WireCrypt` to `Enabled`;
+sets docker environment variable `EnableLegacyClientAuth` (`jacobalberty/firebird`) or `FIREBIRD_USE_LEGACY_AUTH` (`ghcr.io/fdcastel/firebird`) to `true`;
+passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if this property is not explicitly set through `withUrlParam`.
+- `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to `Enabled`; 
+sets docker environment variable `EnableWireCrypt` (`jacobalberty/firebird`) to `true`, or `FIREBIRD_CONF_WireCrypt` (`ghcr.io/fdcastel/firebird`) to `Enabled`.
+- `withTimeZone(String)` - Sets the time zone (defaults to JVM default time zone); 
+- sets docker environment variable `TZ` to the specified value
+- `withSysdbaPassword(String)` - Sets the SYSDBA password, but if `withUsername(String)` is set to `sysdba` (case-insensitive), this property is ignored and the value of `withPassword` is used instead; 
+sets docker environment variable `ISC_PASSWORD` (`jacobalberty/firebird`) or `FIREBIRD_ROOT_PASSWORD` (`ghcr.io/fdcastel/firebird`) to the specified value.
 
 Example of use:
 
@@ -133,6 +127,8 @@ Where:
   - `user` (_optional_) specifies the username to create and connect (defaults to `test`)
   - `password` (_optional_) specifies the password for the user (defaults to `test`)
 - `<value>` is the value of the property
+
+Currently, these URLs can only use the `jacobalberty/firebird` images.
 
 Example of use:
 

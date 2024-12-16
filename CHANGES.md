@@ -6,6 +6,10 @@ Version History
 - Updated org.testcontainers:jdbc to 1.20.4
 - Updated various test-dependencies
 - Updated Maven build plugins
+- Added support for [ghcr.io/fdcastel/firebird](https://github.com/fdcastel/firebird-docker) images. \
+  The name is defined in `FirebirdContainer.FDCASTEL_IMAGE` (`String`) and `FirebirdContainer.FDCASTEL_IMAGE_NAME` (`DockerImageName`). \
+  These images are not accessible as a `jdbc:tc:firebird[sql]:...` URL, only through `FirebirdContainer`.\
+  All existing configuration options are mapped in a backwards compatible way.
 
 1.4.0
 -----

@@ -4,10 +4,15 @@ import org.firebirdsql.gds.impl.GDSServerVersion;
 import org.firebirdsql.jdbc.FirebirdConnection;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.testcontainers.utility.DockerImageName;
 
 import java.sql.*;
+import java.util.stream.Stream;
 
 import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FDCASTEL_TEST_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SC_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SS_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
@@ -18,12 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("resource")
 class FirebirdContainerTest {
 
-    @Test
-    void testWithSysdbaPassword() throws SQLException {
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithSysdbaPassword(DockerImageName imageName) throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
                 .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
@@ -50,11 +57,12 @@ class FirebirdContainerTest {
     /**
      * With {@code username} set to sysdba, {@code password} should take precedence over {@code sysdbaPassword}
      */
-    @Test
-    void testUserPasswordTakesPrecedenceOverWithSysdbaPassword() throws SQLException {
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testUserPasswordTakesPrecedenceOverWithSysdbaPassword(DockerImageName imageName) throws SQLException {
         final String userPassword = "password1";
         final String withSysdbaPassword = "password2";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
                 .withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
             container.start();
 
@@ -64,9 +72,10 @@ class FirebirdContainerTest {
         }
     }
 
-    @Test
-    void testWithEnableLegacyClientAuth() throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithEnableLegacyClientAuth(DockerImageName imageName) throws SQLException {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
                 .withEnableLegacyClientAuth()) {
             container.start();
 
@@ -79,9 +88,10 @@ class FirebirdContainerTest {
         }
     }
 
-    @Test
-    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default() {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default(DockerImageName imageName) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
                 .withEnableLegacyClientAuth()) {
             container.start();
 
@@ -92,9 +102,10 @@ class FirebirdContainerTest {
         }
     }
 
-    @Test
-    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet() {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet(DockerImageName imageName) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
                 .withEnableLegacyClientAuth()
                 .withUrlParam("authPlugins", "Legacy_Auth")) {
             container.start();
@@ -106,9 +117,10 @@ class FirebirdContainerTest {
         }
     }
 
-    @Test
-    void testWithEnableWireCrypt() throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE).withEnableWireCrypt()) {
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithEnableWireCrypt(DockerImageName imageName) throws SQLException {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName).withEnableWireCrypt()) {
             container.start();
 
             if (FirebirdContainer.isWireEncryptionSupported()) {
@@ -174,9 +186,32 @@ class FirebirdContainerTest {
         }
     }
 
+    /**
+     * The fdcastel/firebird images handle FIREBIRD_DATABASE and need an absolute path to access the database
+     */
     @Test
-    void testWithAdditionalUrlParamInJdbcUrl() {
-        try (FirebirdContainer<?> firebird = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+    void fdCastleImage_databaseName() throws Exception {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(FDCASTEL_TEST_IMAGE).withDatabaseName("test")) {
+            assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
+
+            container.start();
+
+            assertEquals("/var/lib/firebird/data/test", container.getDatabaseName(),
+                    "Expect modified database name after start");
+
+            try (Connection connection = DriverManager
+                    .getConnection("jdbc:firebirdsql://" + container.getHost() + ":" + container.getMappedPort(FIREBIRD_PORT) + "/" + container.getDatabaseName(),
+                            container.getUsername(), container.getPassword())
+            ) {
+                assertTrue(connection.isValid(1000));
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("defaultTestImages")
+    void testWithAdditionalUrlParamInJdbcUrl(DockerImageName imageName) {
+        try (FirebirdContainer<?> firebird = new FirebirdContainer<>(imageName)
                 .withUrlParam("charSet", "utf-8")
                 .withUrlParam("blobBufferSize", "2048")) {
 
@@ -188,5 +223,9 @@ class FirebirdContainerTest {
                     containsString("blobBufferSize=2048"),
                     containsString("charSet=utf-8")));
         }
+    }
+
+    static Stream<DockerImageName> defaultTestImages() {
+        return Stream.of(FIREBIRD_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
     }
 }

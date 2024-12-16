@@ -23,7 +23,9 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final String NAME = "firebird";
     public static final String ALTERNATE_NAME = "firebirdsql";
     public static final String IMAGE = "jacobalberty/firebird";
+    public static final String FDCASTEL_IMAGE = "ghcr.io/fdcastel/firebird";
     static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse(IMAGE);
+    static final DockerImageName FDCASTEL_IMAGE_NAME = DockerImageName.parse(FDCASTEL_IMAGE);
     public static final String DEFAULT_TAG = "v4.0.2";
 
     public static final Integer FIREBIRD_PORT = 3050;
@@ -65,29 +67,21 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      */
     public FirebirdContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
-
-        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME, FDCASTEL_IMAGE_NAME);
 
         addExposedPort(FIREBIRD_PORT);
     }
 
     @Override
     protected void configure() {
-        addEnv("TZ", timeZone);
-        addEnv("FIREBIRD_DATABASE", databaseName);
+        ImageVariant variant = ImageVariant.of(getDockerImageName());
+        variant.setTimeZone(this);
+        variant.setDatabaseName(this);
 
-        if (FIREBIRD_SYSDBA.equalsIgnoreCase(username)) {
-            addEnv("ISC_PASSWORD", password);
-        } else {
-            addEnv("FIREBIRD_USER", username);
-            addEnv("FIREBIRD_PASSWORD", password);
-            if (sysdbaPassword != null) {
-                addEnv("ISC_PASSWORD", sysdbaPassword);
-            }
-        }
+        variant.setUserAndPassword(this);
 
         if (enableLegacyClientAuth) {
-            addEnv("EnableLegacyClientAuth", "true");
+            variant.enableLegacyAuth(this);
             if (!urlParameters.containsKey(CONNECTION_PROPERTY_AUTH_PLUGINS)) {
                 // Allow legacy auth with Jaybird 4, while also allowing Srp256 and Srp
                 withUrlParam(CONNECTION_PROPERTY_AUTH_PLUGINS, "Srp256,Srp,Legacy_Auth");
@@ -95,11 +89,11 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
         }
 
         if (enableWireCrypt) {
-            addEnv("EnableWireCrypt", "true");
+            variant.setWireCryptEnabled(this);
         } else if (!isWireEncryptionSupported()) {
             log.warn("Java Virtual Machine does not support wire protocol encryption requirements. " +
                 "Downgrading to EnableWireCrypt = true. To fix this, configure the JVM with unlimited strength Cryptographic Jurisdiction Policy.");
-            addEnv("EnableWireCrypt", "true");
+            variant.setWireCryptEnabled(this);
         }
     }
 
@@ -118,11 +112,23 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     @Override
     public String getDatabaseName() {
         if (isRunning()) {
+            ImageVariant imageVariant = ImageVariant.of(getDockerImageName());
+            switch (imageVariant) {
+            case JACOBALBERTY:
             if (isFirebird25Image()) {
                 // The 2.5 images of jacobalberty/firebird require an absolute path to access the database
                 // Provide this value only when the container is running
                 String databasePath = getEnvMap().getOrDefault("DBPATH", "/firebird/data");
                 return databasePath + "/" + databaseName;
+            }
+            return databaseName;
+            case FDCASTEL:
+                // The fdcastel/firebird images require an absolute path to access the database
+                // Provide this value only when the container is running
+                if (databaseName.charAt(0) != '/') {
+                    return "/var/lib/firebird/data/" + databaseName;
+                }
+                return databaseName;
             }
         }
         return databaseName;
@@ -232,5 +238,78 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
             log.error("Cipher not found, JVM doesn't support encryption requirements", e);
             return false;
         }
+    }
+
+    private enum ImageVariant {
+        JACOBALBERTY {
+            @Override
+            void setUserAndPassword(FirebirdContainer<?> container) {
+                if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
+                    container.addEnv("ISC_PASSWORD", container.password);
+                } else {
+                    container.addEnv("FIREBIRD_USER", container.username);
+                    container.addEnv("FIREBIRD_PASSWORD", container.password);
+                    if (container.sysdbaPassword != null) {
+                        container.addEnv("ISC_PASSWORD", container.sysdbaPassword);
+                    }
+                }
+            }
+
+            @Override
+            void enableLegacyAuth(FirebirdContainer<?> container) {
+                container.addEnv("EnableLegacyClientAuth", "true");
+            }
+
+            @Override
+            void setWireCryptEnabled(FirebirdContainer<?> container) {
+                container.addEnv("EnableWireCrypt", "true");
+            }
+        },
+        FDCASTEL {
+            @Override
+            void setUserAndPassword(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_USER", container.username);
+                container.addEnv("FIREBIRD_PASSWORD", container.password);
+                if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
+                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.password);
+                } else if (container.sysdbaPassword != null) {
+                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.sysdbaPassword);
+                }
+            }
+
+            @Override
+            void enableLegacyAuth(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_USE_LEGACY_AUTH", "true");
+            }
+
+            @Override
+            void setWireCryptEnabled(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_CONF_WireCrypt", "Enabled");
+            }
+        };
+
+        void setTimeZone(FirebirdContainer<?> container) {
+            container.addEnv("TZ", container.timeZone);
+        }
+
+        void setDatabaseName(FirebirdContainer<?> container) {
+            container.addEnv("FIREBIRD_DATABASE", container.databaseName);
+        }
+
+        abstract void setUserAndPassword(FirebirdContainer<?> container);
+
+        abstract void enableLegacyAuth(FirebirdContainer<?> container);
+
+        abstract void setWireCryptEnabled(FirebirdContainer<?> container);
+
+        static ImageVariant of(String imageNameString) {
+            DockerImageName imageName = DockerImageName.parse(imageNameString);
+            if (imageName.isCompatibleWith(FDCASTEL_IMAGE_NAME)) {
+                return FDCASTEL;
+            }
+            // Assume the default
+            return JACOBALBERTY;
+        }
+
     }
 }
