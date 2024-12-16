@@ -26,7 +26,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Cache Docker images.
-      uses: ScribeMD/docker-cache@e481e638abdb45e2fa30845305c387a544cc617f
+      uses: ScribeMD/docker-cache@fb28c93772363301b8d0a6072ce850224b73f74e
       with:
         key: docker-${{ runner.os }}-${{ hashFiles('src/test/**') }}
     - name: Build with Maven
