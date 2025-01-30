@@ -16,6 +16,7 @@ import static org.firebirdsql.testcontainers.FirebirdTestImages.FDCASTEL_TEST_IM
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SC_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SS_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.PROJECT_TEST_IMAGE;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -187,11 +188,13 @@ class FirebirdContainerTest {
     }
 
     /**
-     * The fdcastel/firebird images handle FIREBIRD_DATABASE and need an absolute path to access the database
+     * The firebirdsql/firebird and fdcastel/firebird images handle FIREBIRD_DATABASE and need an absolute path to
+     * access the database
      */
-    @Test
-    void fdCastleImage_databaseName() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FDCASTEL_TEST_IMAGE).withDatabaseName("test")) {
+    @ParameterizedTest
+    @MethodSource("projectCompatibleImages")
+    void projectImage_databaseName(DockerImageName imageName) throws Exception {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -226,6 +229,11 @@ class FirebirdContainerTest {
     }
 
     static Stream<DockerImageName> defaultTestImages() {
-        return Stream.of(FIREBIRD_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
+        return Stream.of(PROJECT_TEST_IMAGE, FIREBIRD_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
+    }
+
+    static Stream<DockerImageName> projectCompatibleImages() {
+        // NOTE: Note sure how long FDCASTEL remains compatible with PROJECT
+        return Stream.of(PROJECT_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
     }
 }

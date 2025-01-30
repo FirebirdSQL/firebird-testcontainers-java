@@ -1,6 +1,19 @@
 Version History
 ===============
 
+1.5.1
+-----
+- Added support for [firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird). \
+  This was originally the _fdcastel_ image. \
+  The name is defined in `FirebirdContainer.PROJECT_IMAGE` (`String`) and `FirebirdContainer.PROJECT_IMAGE_NAME` (`DockerImageName`). \
+  In 1.5.x, these images are not accessible as a `jdbc:tc:firebird[sql]:...` URL, only through `FirebirdContainer`; this will change with version 1.6.0. \
+  All existing configuration options are mapped in a backwards compatible way.
+- Defined `JACOB_ALBERTY_IMAGE` and `JACOB_ALBERY_IMAGE_NAME` constants in `FirebirdContainer`.
+- Support for the _fdcastel_ image is considered deprecated, but there are currently no plans to remove it. \
+  Switch to the _project_ image.
+- In the 1.6.0 release, the 5.0.1 version of the _project_ image will become the default image. \
+  Make sure you explicitly use this image name (and a version tag) if you want to stick to the _Jacob Alberty_ image with the next release.
+
 1.5.0
 -----
 - Updated org.testcontainers:jdbc to 1.20.4

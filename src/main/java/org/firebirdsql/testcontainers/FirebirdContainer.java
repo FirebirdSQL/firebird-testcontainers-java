@@ -22,10 +22,22 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
     public static final String NAME = "firebird";
     public static final String ALTERNATE_NAME = "firebirdsql";
-    public static final String IMAGE = "jacobalberty/firebird";
+    public static final String PROJECT_IMAGE = "firebirdsql/firebird";
+    public static final String JACOB_ALBERTY_IMAGE = "jacobalberty/firebird";
+    /**
+     * @deprecated Use {@link #PROJECT_IMAGE}
+     */
+    @Deprecated
     public static final String FDCASTEL_IMAGE = "ghcr.io/fdcastel/firebird";
-    static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse(IMAGE);
+    public static final String IMAGE = JACOB_ALBERTY_IMAGE;
+    static final DockerImageName PROJECT_IMAGE_NAME = DockerImageName.parse(PROJECT_IMAGE);
+    static final DockerImageName JACOB_ALBERTY_IMAGE_NAME = DockerImageName.parse(JACOB_ALBERTY_IMAGE);
+    /**
+     * @deprecated Use {@link #PROJECT_IMAGE_NAME}
+     */
+    @Deprecated
     static final DockerImageName FDCASTEL_IMAGE_NAME = DockerImageName.parse(FDCASTEL_IMAGE);
+    static final DockerImageName DEFAULT_IMAGE_NAME = JACOB_ALBERTY_IMAGE_NAME;
     public static final String DEFAULT_TAG = "v4.0.2";
 
     public static final Integer FIREBIRD_PORT = 3050;
@@ -67,7 +79,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      */
     public FirebirdContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
-        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME, FDCASTEL_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(PROJECT_IMAGE_NAME, JACOB_ALBERTY_IMAGE_NAME, FDCASTEL_IMAGE_NAME);
 
         addExposedPort(FIREBIRD_PORT);
     }
@@ -122,6 +134,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
                 return databasePath + "/" + databaseName;
             }
             return databaseName;
+            case PROJECT:
             case FDCASTEL:
                 // The fdcastel/firebird images require an absolute path to access the database
                 // Provide this value only when the container is running
@@ -241,6 +254,28 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     }
 
     private enum ImageVariant {
+        PROJECT {
+            @Override
+            void setUserAndPassword(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_USER", container.username);
+                container.addEnv("FIREBIRD_PASSWORD", container.password);
+                if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
+                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.password);
+                } else if (container.sysdbaPassword != null) {
+                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.sysdbaPassword);
+                }
+            }
+
+            @Override
+            void enableLegacyAuth(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_USE_LEGACY_AUTH", "true");
+            }
+
+            @Override
+            void setWireCryptEnabled(FirebirdContainer<?> container) {
+                container.addEnv("FIREBIRD_CONF_WireCrypt", "Enabled");
+            }
+        },
         JACOBALBERTY {
             @Override
             void setUserAndPassword(FirebirdContainer<?> container) {
@@ -268,23 +303,17 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
         FDCASTEL {
             @Override
             void setUserAndPassword(FirebirdContainer<?> container) {
-                container.addEnv("FIREBIRD_USER", container.username);
-                container.addEnv("FIREBIRD_PASSWORD", container.password);
-                if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
-                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.password);
-                } else if (container.sysdbaPassword != null) {
-                    container.addEnv("FIREBIRD_ROOT_PASSWORD", container.sysdbaPassword);
-                }
+                PROJECT.setUserAndPassword(container);
             }
 
             @Override
             void enableLegacyAuth(FirebirdContainer<?> container) {
-                container.addEnv("FIREBIRD_USE_LEGACY_AUTH", "true");
+                PROJECT.enableLegacyAuth(container);
             }
 
             @Override
             void setWireCryptEnabled(FirebirdContainer<?> container) {
-                container.addEnv("FIREBIRD_CONF_WireCrypt", "Enabled");
+                PROJECT.setWireCryptEnabled(container);
             }
         };
 
@@ -304,7 +333,11 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
 
         static ImageVariant of(String imageNameString) {
             DockerImageName imageName = DockerImageName.parse(imageNameString);
-            if (imageName.isCompatibleWith(FDCASTEL_IMAGE_NAME)) {
+            if (imageName.isCompatibleWith(PROJECT_IMAGE_NAME)) {
+                return PROJECT;
+            } else if (imageName.isCompatibleWith(JACOB_ALBERTY_IMAGE_NAME)) {
+                return JACOBALBERTY;
+            } else if (imageName.isCompatibleWith(FDCASTEL_IMAGE_NAME)) {
                 return FDCASTEL;
             }
             // Assume the default
