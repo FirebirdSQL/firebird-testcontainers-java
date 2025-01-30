@@ -6,10 +6,15 @@ firebird-testcontainers-java
 Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
-The docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/), and also supports [ghcr.io/fdcastel/firebird](https://github.com/fdcastel/firebird-docker).
+The default Docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/), and also supports 
+[firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird) (since 1.5.1) and 
+[ghcr.io/fdcastel/firebird](https://github.com/fdcastel/firebird-docker) (since 1.5.0).
 
-If you want to use Firebird 2.5, use the 2.5.x-sc (SuperClassic) variant of the image, or 2.5.9-ss
-as earlier versions of the 2.5.x-ss (SuperServer) variant seem to be broken.
+The `firebirdsql/firebird` image will become the default image in version 1.6.0.
+
+If you want to use Firebird 2.5, use the 2.5.x-sc (SuperClassic) variant of 
+the `jacobalberty/firebird` image, or 2.5.9-ss as earlier versions of the 2.5.x-ss 
+(SuperServer) variant seem to be broken.
 
 Prerequisites
 -------------
@@ -28,7 +33,7 @@ to explicitly depend on [Jaybird](https://github.com/FirebirdSQL/jaybird).
 ### Gradle
 
 ```groovy
-testImplementation "org.firebirdsql:firebird-testcontainers-java:1.5.0"
+testImplementation "org.firebirdsql:firebird-testcontainers-java:1.5.1"
 ```
 
 ### Maven
@@ -37,7 +42,7 @@ testImplementation "org.firebirdsql:firebird-testcontainers-java:1.5.0"
 <dependency>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -66,10 +71,10 @@ Important standard options are:
 Firebird specific options are:
 
 - `withEnableLegacyClientAuth()` - (_Firebird 3+_) Enables `LegacyAuth` and uses it as the default for creating users, also relaxes `WireCrypt` to `Enabled`;
-sets docker environment variable `EnableLegacyClientAuth` (`jacobalberty/firebird`) or `FIREBIRD_USE_LEGACY_AUTH` (`ghcr.io/fdcastel/firebird`) to `true`;
+sets docker environment variable `EnableLegacyClientAuth` (`jacobalberty/firebird`) or `FIREBIRD_USE_LEGACY_AUTH` (`firebirdsql/firebird` and `ghcr.io/fdcastel/firebird`) to `true`;
 passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if this property is not explicitly set through `withUrlParam`.
 - `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to `Enabled`; 
-sets docker environment variable `EnableWireCrypt` (`jacobalberty/firebird`) to `true`, or `FIREBIRD_CONF_WireCrypt` (`ghcr.io/fdcastel/firebird`) to `Enabled`.
+sets docker environment variable `EnableWireCrypt` (`jacobalberty/firebird`) to `true`, or `FIREBIRD_CONF_WireCrypt` (`firebirdsql/firebird` and `ghcr.io/fdcastel/firebird`) to `Enabled`.
 - `withTimeZone(String)` - Sets the time zone (defaults to JVM default time zone); 
 - sets docker environment variable `TZ` to the specified value
 - `withSysdbaPassword(String)` - Sets the SYSDBA password, but if `withUsername(String)` is set to `sysdba` (case-insensitive), this property is ignored and the value of `withPassword` is used instead; 
@@ -128,7 +133,8 @@ Where:
   - `password` (_optional_) specifies the password for the user (defaults to `test`)
 - `<value>` is the value of the property
 
-Currently, these URLs can only use the `jacobalberty/firebird` images.
+Currently, these URLs can only use the `jacobalberty/firebird` images. In 1.6.0, 
+this will switch to use `firebirdsql/firebird`.
 
 Example of use:
 
