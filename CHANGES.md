@@ -13,6 +13,7 @@ Version History
   Switch to the _project_ image.
 - In the 1.6.0 release, the 5.0.1 version of the _project_ image will become the default image. \
   Make sure you explicitly use this image name (and a version tag) if you want to stick to the _Jacob Alberty_ image with the next release.
+- Updated various test-dependencies
 
 1.5.0
 -----
