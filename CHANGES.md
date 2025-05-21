@@ -1,6 +1,12 @@
 Version History
 ===============
 
+vNext
+-----
+- Updated org.testcontainers:jdbc to 1.21.0
+- Updated various test-dependencies
+- Updated Maven build plugins
+
 1.5.1
 -----
 - Added support for [firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird). \
