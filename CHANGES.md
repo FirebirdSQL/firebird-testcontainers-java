@@ -12,7 +12,7 @@ vNext
   Switch to the _project_ image  (`firebirdsql/firebird`).
 - Support for the _fdcastel_ image was removed as it is no longer available. \
   Switch to the _project_ image (`firebirdsql/firebird`).
-- Updated org.testcontainers:jdbc to 1.21.0
+- Updated org.testcontainers:jdbc to 1.21.3
 - Updated various test-dependencies
 - Updated Maven build plugins
 
