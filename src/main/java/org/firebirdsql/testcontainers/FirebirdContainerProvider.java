@@ -5,6 +5,12 @@ import org.testcontainers.containers.JdbcDatabaseContainerProvider;
 import org.testcontainers.jdbc.ConnectionUrl;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.util.Collections.unmodifiableSet;
+
 /**
  * Factory for Firebird containers.
  */
@@ -23,9 +29,21 @@ public class FirebirdContainerProvider extends JdbcDatabaseContainerProvider {
         return newInstance(FirebirdContainer.DEFAULT_TAG);
     }
 
+    // Two character prefix of tags of the jacobalberty image
+    // The firebirdsql image uses versions without v prefix and doesn't provide a Firebird 2.x image
+    private static final Set<String> LEGACY_TAG_PREFIXES = unmodifiableSet(new HashSet<>(
+            Arrays.asList("2.", "v2", "v3", "v4", "v5")));
+
+    private static boolean isLegacyTag(String tag) {
+        return tag.length() >= 2 && LEGACY_TAG_PREFIXES.contains(tag.substring(0, 2));
+    }
+
     @Override
     public JdbcDatabaseContainer newInstance(String tag) {
-        return new FirebirdContainer(DockerImageName.parse(FirebirdContainer.IMAGE).withTag(tag));
+        DockerImageName imageName = isLegacyTag(tag)
+                ? FirebirdContainer.JACOB_ALBERTY_IMAGE_NAME
+                : FirebirdContainer.DEFAULT_IMAGE_NAME;
+        return new FirebirdContainer(imageName.withTag(tag));
     }
 
     @Override

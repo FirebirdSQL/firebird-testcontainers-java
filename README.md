@@ -6,15 +6,13 @@ firebird-testcontainers-java
 Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
-The default Docker image used is [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/), and also supports 
-[firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird) (since 1.5.1) and 
-[ghcr.io/fdcastel/firebird](https://github.com/fdcastel/firebird-docker) (since 1.5.0).
-
-The `firebirdsql/firebird` image will become the default image in version 1.6.0.
+The default Docker image used is [firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird), and also supports 
+ [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/).
 
 If you want to use Firebird 2.5, use the 2.5.x-sc (SuperClassic) variant of 
 the `jacobalberty/firebird` image, or 2.5.9-ss as earlier versions of the 2.5.x-ss 
-(SuperServer) variant seem to be broken.
+(SuperServer) variant seem to be broken. However, recently, it seems that the
+2.5.x-sc variants also no longer work reliably.
 
 Prerequisites
 -------------
@@ -65,20 +63,20 @@ Important standard options are:
   For `jacobalberty/firebird`, if the value is `sysdba`, `FIREBIRD_USER` is not set.
 - `withPassword(String)` - Sets the password of the user (defaults to `test`); sets the docker environment variable `FIREBIRD_PASSWORD`. \
   For `jacobalberty/firebird`, if the username is `sysdba`, `ISC_PASSWORD` is set instead of `FIREBIRD_PASSWORD`. \
-  For `ghcr.io/fdcastel/firebird`, if the username is `sysdba`, it also sets `FIREBIRD_ROOT_PASSWORD`.
+  For `firebirdsql/firebird`, if the username is `sysdba`, it also sets `FIREBIRD_ROOT_PASSWORD`.
 - `withDatabaseName(String)` - Sets the database name (defaults to `test`); sets docker environment variable `FIREBIRD_DATABASE`
 
 Firebird specific options are:
 
 - `withEnableLegacyClientAuth()` - (_Firebird 3+_) Enables `LegacyAuth` and uses it as the default for creating users, also relaxes `WireCrypt` to `Enabled`;
-sets docker environment variable `EnableLegacyClientAuth` (`jacobalberty/firebird`) or `FIREBIRD_USE_LEGACY_AUTH` (`firebirdsql/firebird` and `ghcr.io/fdcastel/firebird`) to `true`;
+sets docker environment variable `EnableLegacyClientAuth` (`jacobalberty/firebird`) or `FIREBIRD_USE_LEGACY_AUTH` (`firebirdsql/firebird`) to `true`;
 passes connection property `authPlugins` with value `Srp256,Srp,Legacy_Auth` if this property is not explicitly set through `withUrlParam`.
 - `withEnableWireCrypt` - (_Firebird 3+_) Relaxes `WireCrypt` from `Required` to `Enabled`; 
-sets docker environment variable `EnableWireCrypt` (`jacobalberty/firebird`) to `true`, or `FIREBIRD_CONF_WireCrypt` (`firebirdsql/firebird` and `ghcr.io/fdcastel/firebird`) to `Enabled`.
+sets docker environment variable `EnableWireCrypt` (`jacobalberty/firebird`) to `true`, or `FIREBIRD_CONF_WireCrypt` (`firebirdsql/firebird`) to `Enabled`.
 - `withTimeZone(String)` - Sets the time zone (defaults to JVM default time zone); 
 - sets docker environment variable `TZ` to the specified value
 - `withSysdbaPassword(String)` - Sets the SYSDBA password, but if `withUsername(String)` is set to `sysdba` (case-insensitive), this property is ignored and the value of `withPassword` is used instead; 
-sets docker environment variable `ISC_PASSWORD` (`jacobalberty/firebird`) or `FIREBIRD_ROOT_PASSWORD` (`ghcr.io/fdcastel/firebird`) to the specified value.
+sets docker environment variable `ISC_PASSWORD` (`jacobalberty/firebird`) or `FIREBIRD_ROOT_PASSWORD` (`firebirdsql/firebird`) to the specified value.
 
 Example of use:
 
@@ -92,7 +90,7 @@ import org.testcontainers.utility.DockerImageName;
 public class ExampleRuleTest {
 
   private static final DockerImageName IMAGE = 
-          DockerImageName.parse(FirebirdContainer.IMAGE).withTag("v4.0.2");
+          DockerImageName.parse(FirebirdContainer.IMAGE).withTag("5.0.3");
 
   @Rule
   public final FirebirdContainer<?> container = new FirebirdContainer<?>(IMAGE)
@@ -127,14 +125,16 @@ Where:
 - `<image-tag>` (_optional, but recommended_) is the tag of the docker image to
   use, otherwise the default is used (which might change between versions)
 - `<databasename>` (_optional_) is the name of the database (defaults to `test`)
-- `<property>` is a connection property (Jaybird properties **and** testcontainers properties are possible) \
+- `<property>` is a connection property (Jaybird properties **and** testcontainers
+  properties are possible) \
   Of special note are the properties:
   - `user` (_optional_) specifies the username to create and connect (defaults to `test`)
   - `password` (_optional_) specifies the password for the user (defaults to `test`)
 - `<value>` is the value of the property
 
-Currently, these URLs can only use the `jacobalberty/firebird` images. In 1.6.0, 
-this will switch to use `firebirdsql/firebird`.
+These URLs use the `firebirdsql/firebird` images, except for tags starting with
+`2.`, `v2`, `v3`, `v4` or `v5`, which will select the `jacobalberty/firebird`
+images for backwards compatibility.
 
 Example of use:
 

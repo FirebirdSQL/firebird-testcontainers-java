@@ -12,9 +12,10 @@ import java.sql.*;
 import java.util.stream.Stream;
 
 import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
-import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SC_IMAGE;
-import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SS_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.JACOB_ALBERTY_259_SC_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.JACOB_ALBERTY_259_SS_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
+import static org.firebirdsql.testcontainers.FirebirdTestImages.JACOB_ALBERTY_TEST_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.PROJECT_TEST_IMAGE;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -139,11 +140,15 @@ class FirebirdContainerTest {
     }
 
     /**
-     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
+     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database.
+     * <p>
+     * NOTE: This test is ignored because it occasionally fails locally and repeatedly on GitHub Actions.
+     * </p>
      */
+    @Disabled
     @Test
     void test259_scImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SC_IMAGE).withDatabaseName("test")) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(JACOB_ALBERTY_259_SC_IMAGE).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -161,7 +166,7 @@ class FirebirdContainerTest {
     }
 
     /**
-     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database
+     * The 2.5 images of jacobalberty/firebird handle FIREBIRD_DATABASE and need an absolute path to access the database.
      * <p>
      * NOTE: This test is ignored because it occasionally fails locally and repeatedly on GitHub Actions.
      * </p>
@@ -169,7 +174,7 @@ class FirebirdContainerTest {
     @Disabled
     @Test
     void test259_ssImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_259_SS_IMAGE).withDatabaseName("test")) {
+        try (FirebirdContainer<?> container = new FirebirdContainer<>(JACOB_ALBERTY_259_SS_IMAGE).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -187,8 +192,7 @@ class FirebirdContainerTest {
     }
 
     /**
-     * The firebirdsql/firebird and fdcastel/firebird images handle FIREBIRD_DATABASE and need an absolute path to
-     * access the database
+     * The firebirdsql/firebird images handle FIREBIRD_DATABASE and need an absolute path to access the database.
      */
     @ParameterizedTest
     @MethodSource("projectCompatibleImages")
@@ -228,7 +232,7 @@ class FirebirdContainerTest {
     }
 
     static Stream<DockerImageName> defaultTestImages() {
-        return Stream.of(PROJECT_TEST_IMAGE, FIREBIRD_TEST_IMAGE);
+        return Stream.of(FIREBIRD_TEST_IMAGE, JACOB_ALBERTY_TEST_IMAGE);
     }
 
     static Stream<DockerImageName> projectCompatibleImages() {

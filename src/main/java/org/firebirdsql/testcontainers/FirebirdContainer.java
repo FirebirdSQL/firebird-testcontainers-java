@@ -12,7 +12,7 @@ import java.time.ZoneId;
 /**
  * Testcontainers implementation for Firebird.
  * <p>
- * Supported image: {@code jacobalberty/firebird}, {@code firebirdsql/firebird}.
+ * Supported image: {@code firebirdsql/firebird} and {@code jacobalberty/firebird} (deprecated).
  * <p>
  * Exposed ports: 3050
  */
@@ -23,12 +23,20 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final String NAME = "firebird";
     public static final String ALTERNATE_NAME = "firebirdsql";
     public static final String PROJECT_IMAGE = "firebirdsql/firebird";
+    /**
+     * @deprecated Use {@link #PROJECT_IMAGE}
+     */
+    @Deprecated
     public static final String JACOB_ALBERTY_IMAGE = "jacobalberty/firebird";
-    public static final String IMAGE = JACOB_ALBERTY_IMAGE;
+    public static final String IMAGE = PROJECT_IMAGE;
     static final DockerImageName PROJECT_IMAGE_NAME = DockerImageName.parse(PROJECT_IMAGE);
+    /**
+     * @deprecated Use {@link #PROJECT_IMAGE_NAME}
+     */
+    @Deprecated
     static final DockerImageName JACOB_ALBERTY_IMAGE_NAME = DockerImageName.parse(JACOB_ALBERTY_IMAGE);
-    static final DockerImageName DEFAULT_IMAGE_NAME = JACOB_ALBERTY_IMAGE_NAME;
-    public static final String DEFAULT_TAG = "v4.0.2";
+    static final DockerImageName DEFAULT_IMAGE_NAME = PROJECT_IMAGE_NAME;
+    public static final String DEFAULT_TAG = "5.0.3";
 
     public static final Integer FIREBIRD_PORT = 3050;
     private static final String FIREBIRD_SYSDBA = "sysdba";
@@ -54,7 +62,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     }
 
     /**
-     * Creates a Firebird container with an image name (e.g. {@code "jacobalberty/firebird:3.0.7"}.
+     * Creates a Firebird container with an image name (e.g. {@code "firebirdsql/firebird:5.0.3"}.
      *
      * @param dockerImageName Image name
      */
