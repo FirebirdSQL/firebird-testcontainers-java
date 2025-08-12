@@ -12,7 +12,7 @@ import java.time.ZoneId;
 /**
  * Testcontainers implementation for Firebird.
  * <p>
- * Supported image: {@code firebirdsql/firebird} and {@code jacobalberty/firebird} (deprecated).
+ * Supported images: {@code firebirdsql/firebird} and {@code jacobalberty/firebird} (deprecated).
  * <p>
  * Exposed ports: 3050
  */
