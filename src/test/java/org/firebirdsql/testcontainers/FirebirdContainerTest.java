@@ -12,7 +12,6 @@ import java.sql.*;
 import java.util.stream.Stream;
 
 import static org.firebirdsql.testcontainers.FirebirdContainer.FIREBIRD_PORT;
-import static org.firebirdsql.testcontainers.FirebirdTestImages.FDCASTEL_TEST_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SC_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_259_SS_IMAGE;
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
@@ -229,11 +228,10 @@ class FirebirdContainerTest {
     }
 
     static Stream<DockerImageName> defaultTestImages() {
-        return Stream.of(PROJECT_TEST_IMAGE, FIREBIRD_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
+        return Stream.of(PROJECT_TEST_IMAGE, FIREBIRD_TEST_IMAGE);
     }
 
     static Stream<DockerImageName> projectCompatibleImages() {
-        // NOTE: Note sure how long FDCASTEL remains compatible with PROJECT
-        return Stream.of(PROJECT_TEST_IMAGE, FDCASTEL_TEST_IMAGE);
+        return Stream.of(PROJECT_TEST_IMAGE);
     }
 }

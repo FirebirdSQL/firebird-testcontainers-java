@@ -6,6 +6,8 @@ vNext
 - Updated org.testcontainers:jdbc to 1.21.0
 - Updated various test-dependencies
 - Updated Maven build plugins
+- Support for the _fdcastel_ image was removed as it is no longer available. \
+  You'll need to switch to the _project_ image (`firebirdsql/firebird`).
 
 1.5.1
 -----

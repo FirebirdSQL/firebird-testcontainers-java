@@ -12,7 +12,7 @@ import java.time.ZoneId;
 /**
  * Testcontainers implementation for Firebird.
  * <p>
- * Supported image: {@code jacobalberty/firebird}, {@code firebirdsql/firebird}, {@code ghcr.io/fdcastel/firebird}.
+ * Supported image: {@code jacobalberty/firebird}, {@code firebirdsql/firebird}.
  * <p>
  * Exposed ports: 3050
  */
@@ -24,19 +24,9 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     public static final String ALTERNATE_NAME = "firebirdsql";
     public static final String PROJECT_IMAGE = "firebirdsql/firebird";
     public static final String JACOB_ALBERTY_IMAGE = "jacobalberty/firebird";
-    /**
-     * @deprecated Use {@link #PROJECT_IMAGE}
-     */
-    @Deprecated
-    public static final String FDCASTEL_IMAGE = "ghcr.io/fdcastel/firebird";
     public static final String IMAGE = JACOB_ALBERTY_IMAGE;
     static final DockerImageName PROJECT_IMAGE_NAME = DockerImageName.parse(PROJECT_IMAGE);
     static final DockerImageName JACOB_ALBERTY_IMAGE_NAME = DockerImageName.parse(JACOB_ALBERTY_IMAGE);
-    /**
-     * @deprecated Use {@link #PROJECT_IMAGE_NAME}
-     */
-    @Deprecated
-    static final DockerImageName FDCASTEL_IMAGE_NAME = DockerImageName.parse(FDCASTEL_IMAGE);
     static final DockerImageName DEFAULT_IMAGE_NAME = JACOB_ALBERTY_IMAGE_NAME;
     public static final String DEFAULT_TAG = "v4.0.2";
 
@@ -79,7 +69,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      */
     public FirebirdContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
-        dockerImageName.assertCompatibleWith(PROJECT_IMAGE_NAME, JACOB_ALBERTY_IMAGE_NAME, FDCASTEL_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(PROJECT_IMAGE_NAME, JACOB_ALBERTY_IMAGE_NAME);
 
         addExposedPort(FIREBIRD_PORT);
     }
@@ -135,8 +125,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
             }
             return databaseName;
             case PROJECT:
-            case FDCASTEL:
-                // The fdcastel/firebird images require an absolute path to access the database
+                // The firebirdsql/firebird images require an absolute path to access the database
                 // Provide this value only when the container is running
                 if (databaseName.charAt(0) != '/') {
                     return "/var/lib/firebird/data/" + databaseName;
@@ -300,22 +289,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
                 container.addEnv("EnableWireCrypt", "true");
             }
         },
-        FDCASTEL {
-            @Override
-            void setUserAndPassword(FirebirdContainer<?> container) {
-                PROJECT.setUserAndPassword(container);
-            }
-
-            @Override
-            void enableLegacyAuth(FirebirdContainer<?> container) {
-                PROJECT.enableLegacyAuth(container);
-            }
-
-            @Override
-            void setWireCryptEnabled(FirebirdContainer<?> container) {
-                PROJECT.setWireCryptEnabled(container);
-            }
-        };
+        ;
 
         void setTimeZone(FirebirdContainer<?> container) {
             container.addEnv("TZ", container.timeZone);
@@ -337,11 +311,9 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
                 return PROJECT;
             } else if (imageName.isCompatibleWith(JACOB_ALBERTY_IMAGE_NAME)) {
                 return JACOBALBERTY;
-            } else if (imageName.isCompatibleWith(FDCASTEL_IMAGE_NAME)) {
-                return FDCASTEL;
             }
             // Assume the default
-            return JACOBALBERTY;
+            return PROJECT;
         }
 
     }
