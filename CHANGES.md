@@ -1,7 +1,7 @@
 Version History
 ===============
 
-vNext
+1.6.0
 -----
 - The _project_ image (`firebirdsql/firebird`) is now the default. \
   Contrary to previously announced, the 5.0.3 tag is the default, not 5.0.1. \
