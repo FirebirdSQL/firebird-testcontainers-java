@@ -1,7 +1,7 @@
 firebird-testcontainers-java
 ============================
 [![Java CI with Maven](https://github.com/FirebirdSQL/firebird-testcontainers-java/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/FirebirdSQL/firebird-testcontainers-java/actions/workflows/maven.yml?query=branch%3Amaster)
-[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/org.firebirdsql/firebird-testcontainers-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.firebirdsql/firebird-testcontainers-java/)
+[![MavenCentral](https://maven-badges.sml.io/sonatype-central/org.firebirdsql/firebird-testcontainers-java/badge.svg)](https://maven-badges.sml.io/sonatype-central/org.firebirdsql/firebird-testcontainers-java/)
 
 Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
