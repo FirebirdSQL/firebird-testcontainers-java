@@ -31,7 +31,7 @@ to explicitly depend on [Jaybird](https://github.com/FirebirdSQL/jaybird).
 ### Gradle
 
 ```groovy
-testImplementation "org.firebirdsql:firebird-testcontainers-java:1.6.0"
+testImplementation "org.firebirdsql:firebird-testcontainers-java:1.6.1"
 ```
 
 ### Maven
@@ -40,7 +40,7 @@ testImplementation "org.firebirdsql:firebird-testcontainers-java:1.6.0"
 <dependency>
     <groupId>org.firebirdsql</groupId>
     <artifactId>firebird-testcontainers-java</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
     <scope>test</scope>
 </dependency>
 ```
