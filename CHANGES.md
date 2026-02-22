@@ -4,6 +4,7 @@ Version History
 1.6.1-SNAPSHOT (tentative)
 -----
 - Updated various test dependencies
+- Updated Maven build plugins
 
 1.6.0
 -----
