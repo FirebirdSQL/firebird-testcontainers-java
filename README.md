@@ -97,7 +97,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.*;
 
-import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -107,7 +106,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExampleContainerTest {
 
   @Container
-  public final FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+  public final FirebirdContainer container = new FirebirdContainer("firebirdsql/firebird:5.0.3")
           .withUsername("testuser")
           .withPassword("testpassword");
 

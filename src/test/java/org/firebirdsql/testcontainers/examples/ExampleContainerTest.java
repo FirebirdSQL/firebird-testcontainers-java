@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExampleContainerTest {
 
     @Container
-    public final FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
+    public final FirebirdContainer container = new FirebirdContainer("firebirdsql/firebird:5.0.3")
             .withUsername("testuser")
             .withPassword("testpassword");
 
