@@ -1,10 +1,10 @@
 Version History
 ===============
 
-1.6.1-SNAPSHOT (tentative)
+1.6.1
 -----
 - Updated org.testcontainers:jdbc to 1.21.4 \
-  This fixed a compatibility issue with recent Docker versions.
+  This fixes a compatibility issue with recent Docker versions.
 - Updated various test dependencies
 - Updated Maven build plugins
 
