@@ -40,20 +40,6 @@ class FirebirdContainerTest {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    void testImplicitImage() throws SQLException {
-        final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer container = new FirebirdContainer()
-                .withSysdbaPassword(sysdbaPassword)) {
-            container.start();
-
-            try (Connection connection = DriverManager.getConnection(container.getJdbcUrl(), "sysdba", sysdbaPassword)) {
-                assertTrue(connection.isValid(100), "Connection is valid");
-            }
-        }
-    }
-
     /**
      * With {@code username} set to sysdba, {@code password} should take precedence over {@code sysdbaPassword}
      */

@@ -11,6 +11,7 @@ Version History
   - write you own rule implementation to start and stop the container.
 - Removed self-referencing generic type parameter from `FirebirdContainer`. \
   You need to replace occurrences of `FirebirdContainer<?>` and `FirebirdContainer<>` with `FirebirdContainer`.
+- Removed deprecated no-arg constructor from `FirebirdContainer`
 - Updated various test dependencies
 
 1.6.1

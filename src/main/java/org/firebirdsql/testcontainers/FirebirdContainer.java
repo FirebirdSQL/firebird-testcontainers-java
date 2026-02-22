@@ -52,16 +52,6 @@ public class FirebirdContainer extends JdbcDatabaseContainer<FirebirdContainer> 
     private String sysdbaPassword;
 
     /**
-     * Creates a Firebird container with the default image ({@link #IMAGE} and {@link #DEFAULT_TAG}).
-     *
-     * @deprecated Use explicit image using {@link #FirebirdContainer(DockerImageName)} or {@link #FirebirdContainer(String)}
-     */
-    @Deprecated
-    public FirebirdContainer() {
-        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
-    }
-
-    /**
      * Creates a Firebird container with an image name (e.g. {@code "firebirdsql/firebird:5.0.3"}.
      *
      * @param dockerImageName Image name
