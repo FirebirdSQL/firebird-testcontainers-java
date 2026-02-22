@@ -1,6 +1,16 @@
 Version History
 ===============
 
+2.0.0-SNAPSHOT
+-----
+- Updated to org.testcontainers:testcontainers-jdbc 2.0.3 \
+  Testcontainers-java 2.0.x no longer supports JUnit 4 rules. You need to either:
+  - switch to JUnit 5 and use the `@Testcontainers` and `@Container` annotations, 
+  - stay on firebird-testcontainers-java 1.6.1 and org.testcontainers:jdbc 1.21.4, 
+  - switch to using Testcontainers URLs instead of using `@Rule` or `@ClassRule`, or 
+  - write you own rule implementation to start and stop the container.
+- Updated various test dependencies
+
 1.6.1
 -----
 - Updated org.testcontainers:jdbc to 1.21.4 \

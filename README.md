@@ -50,10 +50,17 @@ Usage
 
 For extensive documentation, consult https://www.testcontainers.org/modules/databases/
 
-### JUnit rule
+### JUnit support
 
-Using a JUnit `@Rule` or `@ClassRule` you can configure a container and start it
-per test (`@Rule`) or per class (`@ClassRule`).
+Starting with `firebird-testcontainers-java` 2.0.0, use of JUnit 4 is no longer
+supported directly. If you still need JUnit 4 support, use `firebird-testcontainers-java`
+1.6.1, use URL based, or derive your own rule implementation to start and stop
+the container.
+
+For JUnit 5 support, add `org.testcontainers:testcontainers-junit-jupiter` as
+a test dependency. Annotate the test class with `@Testcontainers`. Define
+a `FirebirdContainer` static (shared by all tests), or instance (per test)
+field. Annotate this field with `@Container`.
 
 The container defines several `withXXX` methods for configuration.
 
@@ -81,19 +88,26 @@ sets docker environment variable `ISC_PASSWORD` (`jacobalberty/firebird`) or `FI
 Example of use:
 
 ```java
+package org.firebirdsql.testcontainers.examples;
+
 import org.firebirdsql.testcontainers.FirebirdContainer;
-import org.testcontainers.utility.DockerImageName;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.sql.*;
+
+import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Simple test demonstrating use of {@code @Rule}.
+ * Simple test demonstrating use of {@code @Testcontainers} and {@code @Container}.
  */
-public class ExampleRuleTest {
+@Testcontainers
+public class ExampleContainerTest {
 
-  private static final DockerImageName IMAGE = 
-          DockerImageName.parse(FirebirdContainer.IMAGE).withTag("5.0.3");
-
-  @Rule
-  public final FirebirdContainer<?> container = new FirebirdContainer<?>(IMAGE)
+  @Container
+  public final FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
           .withUsername("testuser")
           .withPassword("testpassword");
 
@@ -103,8 +117,8 @@ public class ExampleRuleTest {
             .getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword());
          Statement stmt = connection.createStatement();
          ResultSet rs = stmt.executeQuery("select CURRENT_USER from RDB$DATABASE")) {
-      assertTrue("has row", rs.next());
-      assertEquals("user name", "TESTUSER", rs.getString(1));
+      assertTrue(rs.next(), "has row");
+      assertEquals("TESTUSER", rs.getString(1), "user name");
     }
   }
 }
@@ -139,23 +153,32 @@ images for backwards compatibility.
 Example of use:
 
 ```java
+import org.junit.jupiter.api.Test;
+
+import java.sql.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * Simple test demonstrating use of url to instantiate container.
  */
-public class ExampleUrlTest {
+class ExampleUrlTest {
 
-    @Test
-    public void canConnectUsingUrl() throws Exception {
-        try (Connection connection = DriverManager
-                .getConnection("jdbc:tc:firebird://hostname/databasename?user=someuser&password=somepwd");
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("select CURRENT_USER from RDB$DATABASE")) {
-            assertTrue("has row", rs.next());
-            assertEquals("user name", "SOMEUSER", rs.getString(1));
-        }
+  @Test
+  void canConnectUsingUrl() throws Exception {
+    try (Connection connection = DriverManager
+            .getConnection("jdbc:tc:firebird://hostname/databasename?user=someuser&password=somepwd");
+         Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery("select CURRENT_USER from RDB$DATABASE")) {
+      assertTrue(rs.next(), "has row");
+      assertEquals("SOMEUSER", rs.getString(1), "user name");
     }
+  }
 }
 ```
+
+For this type of use, it is not necessary to add `org.testcontainers:testcontainers-junit-jupiter`
+as a test dependency.
 
 License
 -------

@@ -1,8 +1,9 @@
 package org.firebirdsql.testcontainers.examples;
 
 import org.firebirdsql.testcontainers.FirebirdContainer;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,15 +11,16 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import static org.firebirdsql.testcontainers.FirebirdTestImages.FIREBIRD_TEST_IMAGE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Simple test demonstrating use of {@code @Rule}.
+ * Simple test demonstrating use of {@code @Testcontainers} and {@code @Container}.
  */
-public class ExampleRuleTest {
+@Testcontainers
+public class ExampleContainerTest {
 
-    @Rule
+    @Container
     public final FirebirdContainer<?> container = new FirebirdContainer<>(FIREBIRD_TEST_IMAGE)
             .withUsername("testuser")
             .withPassword("testpassword");
@@ -29,8 +31,8 @@ public class ExampleRuleTest {
                 .getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword());
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("select CURRENT_USER from RDB$DATABASE")) {
-            assertTrue("has row", rs.next());
-            assertEquals("user name", "TESTUSER", rs.getString(1));
+            assertTrue(rs.next(), "has row");
+            assertEquals("TESTUSER", rs.getString(1), "user name");
         }
     }
 }
