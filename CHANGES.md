@@ -1,6 +1,10 @@
 Version History
 ===============
 
+1.6.1-SNAPSHOT (tentative)
+-----
+- Updated various test dependencies
+
 1.6.0
 -----
 - The _project_ image (`firebirdsql/firebird`) is now the default. \
