@@ -136,7 +136,7 @@ public class FirebirdContainer extends JdbcDatabaseContainer<FirebirdContainer> 
 
     private boolean isFirebird25Image() {
         DockerImageName imageName = DockerImageName.parse(getDockerImageName());
-        return imageName.getUnversionedPart().equals(IMAGE) && imageName.getVersionPart().startsWith("2.5");
+        return imageName.getVersionPart().startsWith("2.5");
     }
 
     @Override

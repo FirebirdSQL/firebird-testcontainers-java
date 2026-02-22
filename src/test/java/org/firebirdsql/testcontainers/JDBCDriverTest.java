@@ -60,7 +60,7 @@ public class JDBCDriverTest {
                 testCase("jdbc:tc:firebird:v3.0.10://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", Options.ScriptedSchema, Options.JDBCParams)
                 // These images are problematic (they don't always seem to have their port available, or connecting doesn't work)
                 //testCase("jdbc:tc:firebird:2.5.9-sc://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", Options.ScriptedSchema, Options.JDBCParams),
-                //testCase("jdbc:tc:firebird:2.5.9-ss://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", Options.ScriptedSchema, Options.JDBCParams),
+                //testCase("jdbc:tc:firebird:2.5.9-ss://hostname/databasename?user=someuser&password=somepwd&charSet=utf-8&TC_INITFUNCTION=org.firebirdsql.testcontainers.JDBCDriverTest::sampleInitFunction", Options.ScriptedSchema, Options.JDBCParams)
         );
     }
 
