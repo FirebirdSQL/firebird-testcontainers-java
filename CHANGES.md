@@ -1,7 +1,7 @@
 Version History
 ===============
 
-2.0.0-SNAPSHOT
+2.0.0
 -----
 - Updated to org.testcontainers:testcontainers-jdbc 2.0.3 \
   Testcontainers-java 2.0.x no longer supports JUnit 4 rules. You need to either:
