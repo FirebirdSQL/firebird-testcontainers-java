@@ -9,6 +9,8 @@ Version History
   - stay on firebird-testcontainers-java 1.6.1 and org.testcontainers:jdbc 1.21.4, 
   - switch to using Testcontainers URLs instead of using `@Rule` or `@ClassRule`, or 
   - write you own rule implementation to start and stop the container.
+- Removed self-referencing generic type parameter from `FirebirdContainer`. \
+  You need to replace occurrences of `FirebirdContainer<?>` and `FirebirdContainer<>` with `FirebirdContainer`.
 - Updated various test dependencies
 
 1.6.1

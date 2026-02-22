@@ -16,7 +16,7 @@ import java.time.ZoneId;
  * <p>
  * Exposed ports: 3050
  */
-public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
+public class FirebirdContainer extends JdbcDatabaseContainer<FirebirdContainer> {
 
     private static final Logger log = LoggerFactory.getLogger(FirebirdContainer.class);
 
@@ -165,19 +165,19 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     }
 
     @Override
-    public SELF withDatabaseName(final String databaseName) {
+    public FirebirdContainer withDatabaseName(final String databaseName) {
         this.databaseName = databaseName;
         return self();
     }
 
     @Override
-    public SELF withUsername(final String username) {
+    public FirebirdContainer withUsername(final String username) {
         this.username = username;
         return self();
     }
 
     @Override
-    public SELF withPassword(final String password) {
+    public FirebirdContainer withPassword(final String password) {
         this.password = password;
         return self();
     }
@@ -187,7 +187,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      *
      * @return this container
      */
-    public SELF withEnableLegacyClientAuth() {
+    public FirebirdContainer withEnableLegacyClientAuth() {
         this.enableLegacyClientAuth = true;
         return self();
     }
@@ -197,7 +197,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      *
      * @return this container
      */
-    public SELF withEnableWireCrypt() {
+    public FirebirdContainer withEnableWireCrypt() {
         this.enableWireCrypt = true;
         return self();
     }
@@ -208,7 +208,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
      * @param timeZone Time zone name (prefer long names like Europe/Amsterdam)
      * @return this container
      */
-    public SELF withTimeZone(final String timeZone) {
+    public FirebirdContainer withTimeZone(final String timeZone) {
         this.timeZone = timeZone;
         return self();
     }
@@ -216,13 +216,13 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     /**
      * Set the sysdba password.
      * <p>
-     * If {@code username} is {@code "sysdba"} (case insensitive), then {@code password} is used instead.
+     * If {@code username} is {@code "sysdba"} (case-insensitive), then {@code password} is used instead.
      * </p>
      *
      * @param sysdbaPassword Sysdba password
      * @return this container
      */
-    public SELF withSysdbaPassword(final String sysdbaPassword) {
+    public FirebirdContainer withSysdbaPassword(final String sysdbaPassword) {
         this.sysdbaPassword = sysdbaPassword;
         return self();
     }
@@ -253,7 +253,7 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
     private enum ImageVariant {
         PROJECT {
             @Override
-            void setUserAndPassword(FirebirdContainer<?> container) {
+            void setUserAndPassword(FirebirdContainer container) {
                 container.addEnv("FIREBIRD_USER", container.username);
                 container.addEnv("FIREBIRD_PASSWORD", container.password);
                 if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
@@ -264,18 +264,18 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
             }
 
             @Override
-            void enableLegacyAuth(FirebirdContainer<?> container) {
+            void enableLegacyAuth(FirebirdContainer container) {
                 container.addEnv("FIREBIRD_USE_LEGACY_AUTH", "true");
             }
 
             @Override
-            void setWireCryptEnabled(FirebirdContainer<?> container) {
+            void setWireCryptEnabled(FirebirdContainer container) {
                 container.addEnv("FIREBIRD_CONF_WireCrypt", "Enabled");
             }
         },
         JACOBALBERTY {
             @Override
-            void setUserAndPassword(FirebirdContainer<?> container) {
+            void setUserAndPassword(FirebirdContainer container) {
                 if (FIREBIRD_SYSDBA.equalsIgnoreCase(container.username)) {
                     container.addEnv("ISC_PASSWORD", container.password);
                 } else {
@@ -288,30 +288,30 @@ public class FirebirdContainer<SELF extends FirebirdContainer<SELF>> extends Jdb
             }
 
             @Override
-            void enableLegacyAuth(FirebirdContainer<?> container) {
+            void enableLegacyAuth(FirebirdContainer container) {
                 container.addEnv("EnableLegacyClientAuth", "true");
             }
 
             @Override
-            void setWireCryptEnabled(FirebirdContainer<?> container) {
+            void setWireCryptEnabled(FirebirdContainer container) {
                 container.addEnv("EnableWireCrypt", "true");
             }
         },
         ;
 
-        void setTimeZone(FirebirdContainer<?> container) {
+        void setTimeZone(FirebirdContainer container) {
             container.addEnv("TZ", container.timeZone);
         }
 
-        void setDatabaseName(FirebirdContainer<?> container) {
+        void setDatabaseName(FirebirdContainer container) {
             container.addEnv("FIREBIRD_DATABASE", container.databaseName);
         }
 
-        abstract void setUserAndPassword(FirebirdContainer<?> container);
+        abstract void setUserAndPassword(FirebirdContainer container);
 
-        abstract void enableLegacyAuth(FirebirdContainer<?> container);
+        abstract void enableLegacyAuth(FirebirdContainer container);
 
-        abstract void setWireCryptEnabled(FirebirdContainer<?> container);
+        abstract void setWireCryptEnabled(FirebirdContainer container);
 
         static ImageVariant of(String imageNameString) {
             DockerImageName imageName = DockerImageName.parse(imageNameString);

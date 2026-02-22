@@ -24,14 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("resource")
 class FirebirdContainerTest {
 
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithSysdbaPassword(DockerImageName imageName) throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer container = new FirebirdContainer(imageName)
                 .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
@@ -45,7 +44,7 @@ class FirebirdContainerTest {
     @Test
     void testImplicitImage() throws SQLException {
         final String sysdbaPassword = "sysdbapassword";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>()
+        try (FirebirdContainer container = new FirebirdContainer()
                 .withSysdbaPassword(sysdbaPassword)) {
             container.start();
 
@@ -63,7 +62,7 @@ class FirebirdContainerTest {
     void testUserPasswordTakesPrecedenceOverWithSysdbaPassword(DockerImageName imageName) throws SQLException {
         final String userPassword = "password1";
         final String withSysdbaPassword = "password2";
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer container = new FirebirdContainer(imageName)
                 .withUsername("sysdba").withPassword(userPassword).withSysdbaPassword(withSysdbaPassword)) {
             container.start();
 
@@ -76,7 +75,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithEnableLegacyClientAuth(DockerImageName imageName) throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer container = new FirebirdContainer(imageName)
                 .withEnableLegacyClientAuth()) {
             container.start();
 
@@ -92,7 +91,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_default(DockerImageName imageName) {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer container = new FirebirdContainer(imageName)
                 .withEnableLegacyClientAuth()) {
             container.start();
 
@@ -106,7 +105,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithEnableLegacyClientAuth_jdbcUrlIncludeAuthPlugins_explicitlySet(DockerImageName imageName) {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer container = new FirebirdContainer(imageName)
                 .withEnableLegacyClientAuth()
                 .withUrlParam("authPlugins", "Legacy_Auth")) {
             container.start();
@@ -121,7 +120,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithEnableWireCrypt(DockerImageName imageName) throws SQLException {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName).withEnableWireCrypt()) {
+        try (FirebirdContainer container = new FirebirdContainer(imageName).withEnableWireCrypt()) {
             container.start();
 
             if (FirebirdContainer.isWireEncryptionSupported()) {
@@ -148,7 +147,7 @@ class FirebirdContainerTest {
     @Disabled
     @Test
     void test259_scImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(JACOB_ALBERTY_259_SC_IMAGE).withDatabaseName("test")) {
+        try (FirebirdContainer container = new FirebirdContainer(JACOB_ALBERTY_259_SC_IMAGE).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -174,7 +173,7 @@ class FirebirdContainerTest {
     @Disabled
     @Test
     void test259_ssImage() throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(JACOB_ALBERTY_259_SS_IMAGE).withDatabaseName("test")) {
+        try (FirebirdContainer container = new FirebirdContainer(JACOB_ALBERTY_259_SS_IMAGE).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -197,7 +196,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("projectCompatibleImages")
     void projectImage_databaseName(DockerImageName imageName) throws Exception {
-        try (FirebirdContainer<?> container = new FirebirdContainer<>(imageName).withDatabaseName("test")) {
+        try (FirebirdContainer container = new FirebirdContainer(imageName).withDatabaseName("test")) {
             assertEquals("test", container.getDatabaseName(), "Expect original database name before start");
 
             container.start();
@@ -217,7 +216,7 @@ class FirebirdContainerTest {
     @ParameterizedTest
     @MethodSource("defaultTestImages")
     void testWithAdditionalUrlParamInJdbcUrl(DockerImageName imageName) {
-        try (FirebirdContainer<?> firebird = new FirebirdContainer<>(imageName)
+        try (FirebirdContainer firebird = new FirebirdContainer(imageName)
                 .withUrlParam("charSet", "utf-8")
                 .withUrlParam("blobBufferSize", "2048")) {
 
