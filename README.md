@@ -22,6 +22,8 @@ Prerequisites
 
 - Docker
 - A supported JVM testing framework
+- Java 8 or higher
+  - NOTE: Our tests require Java 17 or higher
 
 See [Testcontainers prerequisites](https://www.testcontainers.org/#prerequisites) for details.
 
