@@ -37,7 +37,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- NOTE: Test dependencies may target Java 17 -->
+        <!-- Test dependencies may be Java 17+ -->
         <testcontainers.version>2.0.5</testcontainers.version>
         <jaybird.version>6.0.7</jaybird.version>
         <junit.version>6.1.3</junit.version>
@@ -68,7 +68,7 @@
             <artifactId>testcontainers-jdbc</artifactId>
         </dependency>
 
-        <!-- Test dependencies may be Java 11+ -->
+        <!-- Test dependencies may be Java 17+ -->
 
         <dependency>
             <groupId>org.testcontainers</groupId>
