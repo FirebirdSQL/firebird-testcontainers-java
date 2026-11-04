@@ -8,6 +8,9 @@ to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
 The default Docker image used is [firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird), and also supports 
  [jacobalberty/firebird](https://hub.docker.com/r/jacobalberty/firebird/).
+Support for `jacobalberty/firebird` is deprecated. Although we currently we
+have no plans to remove support, we strongly recommend to switch to the 
+`firebirdsql/firebird` image.
 
 If you want to use Firebird 2.5, use the 2.5.x-sc (SuperClassic) variant of 
 the `jacobalberty/firebird` image, or 2.5.9-ss as earlier versions of the 2.5.x-ss 
