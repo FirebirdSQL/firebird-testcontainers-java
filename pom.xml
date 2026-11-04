@@ -37,7 +37,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <testcontainers.version>2.0.3</testcontainers.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
         <jaybird.version>5.0.13.java8</jaybird.version>
         <junit5.version>5.14.4</junit5.version>
     </properties>
