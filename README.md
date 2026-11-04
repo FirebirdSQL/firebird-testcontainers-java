@@ -3,7 +3,7 @@ firebird-testcontainers-java
 [![Java CI with Maven](https://github.com/FirebirdSQL/firebird-testcontainers-java/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/FirebirdSQL/firebird-testcontainers-java/actions/workflows/maven.yml?query=branch%3Amaster)
 [![MavenCentral](https://maven-badges.sml.io/sonatype-central/org.firebirdsql/firebird-testcontainers-java/badge.svg)](https://maven-badges.sml.io/sonatype-central/org.firebirdsql/firebird-testcontainers-java/)
 
-Firebird-testcontainers-java is a module for [Testcontainers](https://www.testcontainers.org/)
+Firebird-testcontainers-java is a module for [Testcontainers](https://java.testcontainers.org/)
 to provide lightweight, throwaway instances of Firebird for JUnit tests.
 
 The default Docker image used is [firebirdsql/firebird](https://hub.docker.com/r/firebirdsql/firebird), and also supports 
@@ -25,7 +25,7 @@ Prerequisites
 - Java 8 or higher
   - NOTE: Our tests require Java 17 or higher
 
-See [Testcontainers prerequisites](https://www.testcontainers.org/#prerequisites) for details.
+See [General Container runtime requirements](https://java.testcontainers.org/supported_docker_environment/) for details.
 
 Dependency
 ----------
@@ -53,7 +53,7 @@ testImplementation "org.firebirdsql:firebird-testcontainers-java:2.0.1"
 Usage
 -----
 
-For extensive documentation, consult https://www.testcontainers.org/modules/databases/
+For extensive documentation, consult https://java.testcontainers.org/modules/databases/
 
 ### JUnit support
 
