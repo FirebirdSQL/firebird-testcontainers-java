@@ -5,6 +5,7 @@ Version History
 -----
 - Updated to org.testcontainers:testcontainers-jdbc 2.0.5
 - Updated various test dependencies
+- Updated Maven build plugins
 
 2.0.0
 -----
