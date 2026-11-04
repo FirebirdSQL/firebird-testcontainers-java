@@ -23,3 +23,9 @@ Updating version
 ```
 mvn versions:set -DnewVersion=<new version>
 ```
+
+Testing
+-------
+
+Although the project is compiled targeting Java 8, testing requires Java 17
+given some of the test-dependencies require higher versions.
