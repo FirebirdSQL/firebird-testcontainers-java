@@ -1,6 +1,10 @@
 Version History
 ===============
 
+2.0.1
+-----
+- Updated various test dependencies
+
 2.0.0
 -----
 - Updated to org.testcontainers:testcontainers-jdbc 2.0.3 \
