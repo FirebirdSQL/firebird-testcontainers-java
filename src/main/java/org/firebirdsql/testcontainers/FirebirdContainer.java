@@ -36,7 +36,7 @@ public class FirebirdContainer extends JdbcDatabaseContainer<FirebirdContainer> 
     @Deprecated
     static final DockerImageName JACOB_ALBERTY_IMAGE_NAME = DockerImageName.parse(JACOB_ALBERTY_IMAGE);
     static final DockerImageName DEFAULT_IMAGE_NAME = PROJECT_IMAGE_NAME;
-    public static final String DEFAULT_TAG = "5.0.3";
+    public static final String DEFAULT_TAG = "5.0.4";
 
     public static final Integer FIREBIRD_PORT = 3050;
     private static final String FIREBIRD_SYSDBA = "sysdba";
@@ -52,7 +52,7 @@ public class FirebirdContainer extends JdbcDatabaseContainer<FirebirdContainer> 
     private String sysdbaPassword;
 
     /**
-     * Creates a Firebird container with an image name (e.g. {@code "firebirdsql/firebird:5.0.3"}.
+     * Creates a Firebird container with an image name (e.g. {@code "firebirdsql/firebird:5.0.4"}).
      *
      * @param dockerImageName Image name
      */

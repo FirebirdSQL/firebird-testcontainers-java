@@ -3,7 +3,8 @@ Version History
 
 2.0.1
 -----
-- Updated to org.testcontainers:testcontainers-jdbc 2.0.5
+- Updated org.testcontainers:testcontainers-jdbc to 2.0.5
+- Updated default image version to Firebird 5.0.4
 - Updated various test dependencies
 - Updated Maven build plugins
 - The GPG key used to sign releases on Maven Central and GitHub was changed to

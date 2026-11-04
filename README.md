@@ -106,7 +106,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExampleContainerTest {
 
   @Container
-  public final FirebirdContainer container = new FirebirdContainer("firebirdsql/firebird:5.0.3")
+  public final FirebirdContainer container = new FirebirdContainer("firebirdsql/firebird:5.0.4")
           .withUsername("testuser")
           .withPassword("testpassword");
 
