@@ -6,6 +6,9 @@ Version History
 - Updated to org.testcontainers:testcontainers-jdbc 2.0.5
 - Updated various test dependencies
 - Updated Maven build plugins
+- The GPG key used to sign releases on Maven Central and GitHub was changed to
+  key-id 373F 65A9 F373 1D5C (fingerprint 8372 B5DA 39C9 2FE1 DB4B BB62 373F 65A9 F373 1D5C).
+  This is a 4096-bit key, where the previous one was 2048 bit.
 
 2.0.0
 -----
